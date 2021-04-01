@@ -106,34 +106,3 @@ def wordCount_map(str):
 			list1.remove(s)
 			x = x-1
 	return d
-
-#MAIN#
-if __name__ == "__main__":
-	corp = corpus()
-	doc_num = 0
-	#Continue adding user input 'documents' to the corpus until the user has no more documents to enter.
-	while(True):
-		print('Would you like to add a document to the corpus? (Y/N)')
-		response = input()
-		if response == 'N' or response == 'n':
-			break
-		elif response == 'Y' or response == 'y':
-			doc_num = doc_num+1
-			print('Enter the document you would like to add to the corpus as a string: ')
-			s = input()
-			d = document(s,wordCount_map(s),doc_num)
-			corp.add_document(d)
-		else:
-			print('Please enter either Y or N\n')
-	#Print the corpus detailing all of the documents as well as a TF-IDF weight for every word in every document in the corpus
-	print("This is the analysis of the corpus you have created: ")
-	print(corp)
-	#Have the user enter two numbers, n i, and return a list of the words in document i of length n. Use a try/except to catch any invalid inputs by the user 
-	while(True):
-		print("create a list of all words of length n in document i, enter in the form of n i ")
-		try:
-			n,i = [int(x) for x in input().split()]
-			print(corp.doc_list[i-1].words_length_n(n))
-			break
-		except:
-			print("This is not a valid entry, ensure that the format is correct and that the document # you have entered is valid")
