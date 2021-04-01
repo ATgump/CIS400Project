@@ -174,63 +174,87 @@ def get_user_profile(twitter_api, screen_names=None, user_ids=None):
 
     return items_to_info
 
+# input: twitter_api, user_id - the user id of the person you are collecting the top 5 reciprocal friends for limit - the limit of friends/followers collected for calculating reciprocal users. 
+# Return: a list of the top 5 reciprocal friend IDs for user_id 
+# My own code
+def top_five_reciprocal(twitter_api, user_id, limit):
+    friends, followers = get_friends_followers_ids(twitter_api, user_id=user_id,friends_limit=limit, followers_limit=limit)
+    reciprocal = list(set.intersection(set(friends),set(followers)))                                        # calculate reciprocal friends from user_id's list of friends/followers
+    if len(reciprocal) <= 5:                                                                                # if the length of this is <= 5 there is no need to make an api call to calculate the follower count
+        return reciprocal
+    recip_users = get_user_profile(twitter_api,user_ids=reciprocal)                                         # get user profiles for these friends to sort by follower count
+    recip_users = sorted(recip_users,key = lambda x:recip_users.get(x)["followers_count"], reverse = True)  # get a list of User_ID sorted by follower count in descending order
+    return recip_users[:5]
+
+
+# input: twitter_api, rid - the user that the top five reciprocal users belong to, top_recip_users - a list of the top 5 reciprocal users for some user ID (rid) 
+# Return: the same list filtered
+# Filter: remove nodes from the list that are already in the queue, are protected users, or have already been added to the graph. In the case that the node has already been added to the graph, draw an edge between it and rid.  
+# My own code
+def filter_top_five(twitter_api,top_recip_users,rid,my_Graph,next_queue = []):
+    users_filtered = []
+    for ID in top_recip_users:
+        if ID in my_Graph.nodes():
+            print("ID: " + str(ID) + " was removed because it is a duplicate")
+            my_Graph.add_edge(rid,ID)
+        elif ID in next_queue or make_twitter_request(twitter_api.users.show, user_id = ID)["protected"]: #note: I don't think its neccessary to check if the ID is in next_queue because the case where it is in next_queue already will be handled by the previous condition.
+            print("ID: " + str(ID) + " was removed because it is ")
+            if ID in next_queue:
+                print("already in the next_queue.")
+            else:
+                print("a protected user.")
+            continue
+        else:
+            users_filtered.append(ID)
+    return users_filtered
+
 # input: screen_name - a starting point screen name to crawl from, limit - the limit of friends/followers collected for calculating reciprocal users. 
 # Return: a graph generated from the nodes collected while crawling. 
 # Adapted from twitter cookbook but primarily my own code
 
 def my_crawler_A2(twitter_api, screen_name, limit=5000):
 
-    # Create an empty graph. Get the user_id for the input screen_name for consitancy (will work with IDs). 
+    # Create an empty graph. Get the initial user_id for the input screen_name for consistancy (will work with IDs). 
 
      my_Graph = networkx.Graph()
      seed_id = str(twitter_api.users.show(screen_name=screen_name)['id'])
 
-     # Get the top 5 reciprocal friends for screen_name, add the nodes/edges for these users to the graph, and put them in the queue (first batch for the crawler)
-  
-     friends, followers = get_friends_followers_ids(twitter_api, user_id=seed_id,friends_limit=limit, followers_limit=limit)
-     reciprocal = list(set.intersection(set(friends),set(followers)))                                        # calculate reciprocal friends from user_id's list of friends/followers
-     recip_users = get_user_profile(twitter_api,user_ids=reciprocal)                                         # get user profiles for these friends to sort by follower count
-     recip_users = sorted(recip_users,key = lambda x:recip_users.get(x)["followers_count"], reverse = True)  # get a list of User_ID sorted by follower count in descending order
-     next_queue = recip_users[:5]                                                                            # add the first batch of reciprocal users to the (initial) queue
-     my_Graph.add_edges_from([(seed_id,y) for y in next_queue])                                              # add initial nodes to graph
+     # Get the top 5 reciprocal friends for screen_name, filter out any protected users, add the nodes/edges for these users to the graph, and put them in the queue (first batch for the crawler)
+     top_recip = top_five_reciprocal(twitter_api,seed_id,5000)
+     print("User ID: " + str(seed_id))
+     print("Reciprocal Users: " + str(top_recip))
+     next_queue = filter_top_five(twitter_api,top_recip,seed_id,my_Graph)                                  # add the first batch of reciprocal users to the (initial) queue
+     print("Users Filtered: " + str(next_queue))
+     my_Graph.add_edges_from([(seed_id,y) for y in next_queue])                                            # add initial nodes to graph
      queue = []
-    
-     # Crawl twitter until at least 100 nodes have been added to the graph.
 
+     # Crawl twitter until at least 100 nodes have been added to the graph.
      while my_Graph.number_of_nodes() < 100:
 
          # queue changing for continuing breadth first search
          (queue,next_queue) = (next_queue,[])
-         
-         # for every id in the queue: calculate top 5 reciprocal friends, add (if possible) 5 unique nodes (users) to the graph from these reciprocal friends and connect nodes with edges as needed. 
-         # Keep adding reciprocal friend id's to the next_queue until the number of nodes in the graph + maximum possible number of nodes added to the graph in next cycle of crawl >= 100. I.E. limit the next queue based off the anticipated # of nodes generated during the next cycle of crawling
+         print("Current Queue: " + str(queue))
 
+         # for every id in the queue: calculate top 5 reciprocal friends, filter these friends, add nodes/edges to the graph then add them to the next queue (assuming next_queue isnt too large). 
+         # Keep adding reciprocal friend id's to the next_queue until the number of nodes in the graph + maximum possible number of nodes added to the graph in next cycle of crawl >= 100. 
+         # I.E. limit the next queue based off the anticipated # of nodes generated during the next cycle of crawling
          for rid in queue:
-             
              # Calculate list of reciprocal friends sorted by follower count in descending order
+             top_recip_users = top_five_reciprocal(twitter_api,rid,5000)
+             print("User ID: " + str(rid))
+             print("Reciprocal Users: " + str(top_recip_users))
 
-             friend_ids, follower_ids = get_friends_followers_ids(twitter_api, user_id=rid,friends_limit=limit, followers_limit=limit)
-             reciprocal = list(set.intersection(set(friend_ids),set(follower_ids)))                                 # calculate reciprocal friends from user_id's list of friends/followers
-             recip_users = get_user_profile(twitter_api,user_ids=reciprocal)                                        # get user profiles for these friends to sort by follower count
-             recip_users = sorted(recip_users,key = lambda x:recip_users.get(x)["followers_count"], reverse = True) # get a list of User_ID sorted by follower count in descending order
+             #filter top 5 users (handle/remove duplicates and dont include protected users in the graph) 
+             users_filtered = filter_top_five(twitter_api,top_recip_users,rid,my_Graph,next_queue)
+             print("Users Filtered: " + str(users_filtered))
 
-             # Add top 5 of the users to the graph (unique), if a user is already added to the graph, draw the appropriate edge in the graph and add a different user. 
+             # add the appropriate edges between the *valid* reciprocal friends
+             my_Graph.add_edges_from([(rid,y) for y in users_filtered])       
 
-             top_five_users = []
-             for user_ID in recip_users:
-                if len(top_five_users) == 5:
-                    break
-                elif user_ID in my_Graph.nodes():
-                    my_Graph.add_edge(rid,user_ID)
-                else:
-                    top_five_users.append(user_ID)
-              
-             # add the appropriate edges between the reciprocal friends
-             my_Graph.add_edges_from([(rid,y) for y in top_five_users])       
-
-             # limit the next queue based off the anticipated # of nodes generated during the next cycle of crawling.   
-             if (my_Graph.number_of_nodes() + len(next_queue)*5) < 100:  
-                next_queue += top_five_users
-
+             # limit the next queue based off the anticipated # of nodes generated during the next cycle of crawling.  
+             if (my_Graph.number_of_nodes() + len(next_queue)*5) < 100:
+                 next_queue += users_filtered
+                
      return my_Graph
+
 
