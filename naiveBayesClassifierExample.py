@@ -19,19 +19,22 @@ db.firstCollection.insert_one({'y':1}) ## firstCollection is a table and the k:v
 pos_tweets = tweets.strings('positive_tweets.json')
 neg_tweets = tweets.strings('negative_tweets.json')
 
+print('len of pos_tweets: ' + str(len(pos_tweets)))
 # create two corpus' (from ourCorpus) one for the positive training tweets and one for the negative
 corp_pos = ourCorpus.corpus(pos_tweets,len(pos_tweets)) 
-corp_neg = ourCorpus.corpus(neg_tweets,len(pos_tweets))
-
+corp_neg = ourCorpus.corpus(neg_tweets,len(neg_tweets))
+print('len of corp_pos: ' + str(len(corp_pos.doc_list)))
 # generate tf-idf vectors for the data (uses my implementaion we should switch to scikit because it also has multinomial NBC which is better than this nltk one for discrete feature values (tfidf))
 pos_train_data = corp_pos.TF_IDF_feature_vector()
 neg_train_data = corp_neg.TF_IDF_feature_vector()
+print('len of pos_train: ' + str(len(pos_train_data)))
+
 print(json.dumps(pos_train_data))
 
 
 #create training data then train the NBC classifier
 train_data = [(v,1) for v in pos_train_data] + [(v,0) for v in neg_train_data]
-
+print(json.dumps(train_data,indent = 2))
 classifier = NBC.train(train_data) 
 
 tweet = "i feel negative, i dont like movies."
