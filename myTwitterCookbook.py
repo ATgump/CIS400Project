@@ -6,7 +6,8 @@ from urllib.error import URLError
 from http.client import BadStatusLine
 import json
 from functools import partial
-import networkx
+import pymongo
+
 
 #Get an authenticator obj to use with twitter API calls:: taken from twitter cookbook
 
@@ -90,171 +91,127 @@ def make_twitter_request(twitter_api_func, max_errors=10, *args, **kw):
                 print("Too many consecutive errors...bailing out.", file=sys.stderr)
                 raise
 
-# Input: screen_name or user_ID. Return: The list of friends,the list of followers of the input id/screen_name :: Taken from twitter cookbook
+def twitter_search(twitter_api, q, max_results=200, **kw):
 
-def get_friends_followers_ids(twitter_api, screen_name=None, user_id=None,
-                              friends_limit=maxint, followers_limit=maxint):
+    # See https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
+    # and https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators
+    # for details on advanced search criteria that may be useful for 
+    # keyword arguments
     
-    # Must have either screen_name or user_id (logical xor)
-    assert (screen_name != None) != (user_id != None),     "Must have screen_name or user_id, but not both"
+    # See https://dev.twitter.com/docs/api/1.1/get/search/tweets    
+    search_results = twitter_api.search.tweets(q=q, count=100, **kw)
     
-    # See http://bit.ly/2GcjKJP and http://bit.ly/2rFz90N for details
-    # on API parameters
+    statuses = search_results['statuses']
     
-    get_friends_ids = partial(make_twitter_request, twitter_api.friends.ids, 
-                              count=5000)
-    get_followers_ids = partial(make_twitter_request, twitter_api.followers.ids, 
-                                count=5000)
-
-    friends_ids, followers_ids = [], []
+    # Iterate through batches of results by following the cursor until we
+    # reach the desired number of results, keeping in mind that OAuth users
+    # can "only" make 180 search queries per 15-minute interval. See
+    # https://developer.twitter.com/en/docs/basics/rate-limits
+    # for details. A reasonable number of results is ~1000, although
+    # that number of results may not exist for all queries.
     
-    for twitter_api_func, limit, ids, label in [
-                    [get_friends_ids, friends_limit, friends_ids, "friends"], 
-                    [get_followers_ids, followers_limit, followers_ids, "followers"]
-                ]:
-        
-        if limit == 0: continue
-        
-        cursor = -1
-        while cursor != 0:
-        
-            # Use make_twitter_request via the partially bound callable...
-            if screen_name: 
-                response = twitter_api_func(screen_name=screen_name, cursor=cursor)
-            else: # user_id
-                response = twitter_api_func(user_id=user_id, cursor=cursor)
-
-            if response is not None:
-                ids += response['ids']
-                cursor = response['next_cursor']
-        
-            print('Fetched {0} total {1} ids for {2}'.format(len(ids),                  label, (user_id or screen_name)),file=sys.stderr)
-        
-            # XXX: You may want to store data during each iteration to provide an 
-            # an additional layer of protection from exceptional circumstances
-        
-            if len(ids) >= limit or response is None:
-                break
-
-    # Do something useful with the IDs, like store them to disk...
-    return friends_ids[:friends_limit], followers_ids[:followers_limit]
-
-
-# input: list of screen_names or user_ids. Return: a dictionary of form {(user_id/screenname:User_object_json_format)} that contains user infomation for every user in the input list :: taken from twitter cookbook
-
-def get_user_profile(twitter_api, screen_names=None, user_ids=None):
-   
-    # Must have either screen_name or user_id (logical xor)
-    assert (screen_names != None) != (user_ids != None),     "Must have screen_names or user_ids, but not both"
+    # Enforce a reasonable limit
+    #max_results = min(1000, max_results)
     
-    items_to_info = {}
-
-    items = screen_names or user_ids
-    
-    while len(items) > 0:
-
-        # Process 100 items at a time per the API specifications for /users/lookup.
-        # See http://bit.ly/2Gcjfzr for details.
+    for _ in range(100): # 10*100 = 1000
+        try:
+            next_results = search_results['search_metadata']['next_results']
+        except KeyError as e: # No more results when next_results doesn't exist
+            break
+            
+        # Create a dictionary from next_results, which has the following form:
+        # ?max_id=313519052523986943&q=NCAA&include_entities=1
+        kwargs = dict([ kv.split('=') 
+                        for kv in next_results[1:].split("&") ])
         
-        items_str = ','.join([str(item) for item in items[:100]])
-        items = items[100:]
+        search_results = twitter_api.search.tweets(**kwargs)
+        statuses += search_results['statuses']
+        
+        if len(statuses) > max_results: 
+            break
+            
+    return statuses
 
-        if screen_names:
-            response = make_twitter_request(twitter_api.users.lookup, 
-                                            screen_name=items_str)
-        else: # user_ids
-            response = make_twitter_request(twitter_api.users.lookup, 
-                                            user_id=items_str)
+
+def save_to_mongo(data, mongo_db, mongo_db_coll, **mongo_conn_kw):
     
-        for user_info in response:
-            if screen_names:
-                items_to_info[user_info['screen_name']] = user_info
-            else: # user_ids
-                items_to_info[user_info['id']] = user_info
+    # Connects to the MongoDB server running on 
+    # localhost:27017 by default
+    
+    client = pymongo.MongoClient(**mongo_conn_kw)
+    
+    # Get a reference to a particular database
+    
+    db = client[mongo_db]
+    
+    # Reference a particular collection in the database
+    
+    coll = db[mongo_db_coll]
+    
+    # Perform a bulk insert and  return the IDs
+    try:
+        return coll.insert_many(data)
+    except:
+        return coll.insert_one(data)
 
-    return items_to_info
+def load_from_mongo(mongo_db, mongo_db_coll, return_cursor=False,
+                    criteria=None, projection=None, **mongo_conn_kw):
+    
+    # Optionally, use criteria and projection to limit the data that is 
+    # returned as documented in 
+    # http://docs.mongodb.org/manual/reference/method/db.collection.find/
+    
+    # Consider leveraging MongoDB's aggregations framework for more 
+    # sophisticated queries.
+    
+    client = pymongo.MongoClient(**mongo_conn_kw)
+    db = client[mongo_db]
+    coll = db[mongo_db_coll]
+    
+    if criteria is None:
+        criteria = {}
+    
+    if projection is None:
+        cursor = coll.find(criteria)
+    else:
+        cursor = coll.find(criteria, projection)
 
-# input: twitter_api, user_id - the user id of the person you are collecting the top 5 reciprocal friends for limit - the limit of friends/followers collected for calculating reciprocal users. 
-# Return: a list of the top 5 reciprocal friend IDs for user_id 
-# My own code
-def top_five_reciprocal(twitter_api, user_id, limit):
-    friends, followers = get_friends_followers_ids(twitter_api, user_id=user_id,friends_limit=limit, followers_limit=limit)
-    reciprocal = list(set.intersection(set(friends),set(followers)))                                        # calculate reciprocal friends from user_id's list of friends/followers
-    if len(reciprocal) <= 5:                                                                                # if the length of this is <= 5 there is no need to make an api call to calculate the follower count
-        return reciprocal
-    recip_users = get_user_profile(twitter_api,user_ids=reciprocal)                                         # get user profiles for these friends to sort by follower count
-    recip_users = sorted(recip_users,key = lambda x:recip_users.get(x)["followers_count"], reverse = True)  # get a list of User_ID sorted by follower count in descending order
-    return recip_users[:5]
+    # Returning a cursor is recommended for large amounts of data
+    
+    if return_cursor:
+        return cursor
+    else:
+        return [ item for item in cursor ]
 
 
-# input: twitter_api, rid - the user that the top five reciprocal users belong to, top_recip_users - a list of the top 5 reciprocal users for some user ID (rid) 
-# Return: the same list filtered
-# Filter: remove nodes from the list that are already in the queue, are protected users, or have already been added to the graph. In the case that the node has already been added to the graph, draw an edge between it and rid.  
-# My own code
-def filter_top_five(twitter_api,top_recip_users,rid,my_Graph,next_queue = []):
-    users_filtered = []
-    for ID in top_recip_users:
-        if ID in my_Graph.nodes():
-            print("ID: " + str(ID) + " was removed because it is a duplicate")
-            my_Graph.add_edge(rid,ID)
-        elif ID in next_queue or make_twitter_request(twitter_api.users.show, user_id = ID)["protected"]: #note: I don't think its neccessary to check if the ID is in next_queue because the case where it is in next_queue already will be handled by the previous condition.
-            print("ID: " + str(ID) + " was removed because it is ")
-            if ID in next_queue:
-                print("already in the next_queue.")
-            else:
-                print("a protected user.")
-            continue
-        else:
-            users_filtered.append(ID)
-    return users_filtered
+def analyze_tweet_content(statuses):
+    
+    if len(statuses) == 0:
+        print("No statuses to analyze")
+        return
+    
+    # A nested helper function for computing lexical diversity
+    def lexical_diversity(tokens):
+        return 1.0*len(set(tokens))/len(tokens) 
+    
+    # A nested helper function for computing the average number of words per tweet
+    def average_words(statuses):
+        total_words = sum([ len(s.split()) for s in statuses ]) 
+        return 1.0*total_words/len(statuses)
 
-# input: screen_name - a starting point screen name to crawl from, limit - the limit of friends/followers collected for calculating reciprocal users. 
-# Return: a graph generated from the nodes collected while crawling. 
-# Adapted from twitter cookbook but primarily my own code
+    status_texts = [ status['text'] for status in statuses ]
+    screen_names, hashtags, urls, media, _ = extract_tweet_entities(statuses)
+    
+    # Compute a collection of all words from all tweets
+    words = [ w 
+          for t in status_texts 
+              for w in t.split() ]
+    
+    print("Lexical diversity (words):", lexical_diversity(words))
+    print("Lexical diversity (screen names):", lexical_diversity(screen_names))
+    print("Lexical diversity (hashtags):", lexical_diversity(hashtags))
+    print("Averge words per tweet:", average_words(status_texts))
 
-def my_crawler_A2(twitter_api, screen_name, limit=5000):
 
-    # Create an empty graph. Get the initial user_id for the input screen_name for consistancy (will work with IDs). 
-
-     my_Graph = networkx.Graph()
-     seed_id = str(twitter_api.users.show(screen_name=screen_name)['id'])
-
-     # Get the top 5 reciprocal friends for screen_name, filter out any protected users, add the nodes/edges for these users to the graph, and put them in the queue (first batch for the crawler)
-     top_recip = top_five_reciprocal(twitter_api,seed_id,5000)
-     print("User ID: " + str(seed_id))
-     print("Reciprocal Users: " + str(top_recip))
-     next_queue = filter_top_five(twitter_api,top_recip,seed_id,my_Graph)                                  # add the first batch of reciprocal users to the (initial) queue
-     print("Users Filtered: " + str(next_queue))
-     my_Graph.add_edges_from([(seed_id,y) for y in next_queue])                                            # add initial nodes to graph
-     queue = []
-
-     # Crawl twitter until at least 100 nodes have been added to the graph.
-     while my_Graph.number_of_nodes() < 100:
-
-         # queue changing for continuing breadth first search
-         (queue,next_queue) = (next_queue,[])
-         print("Current Queue: " + str(queue))
-
-         # for every id in the queue: calculate top 5 reciprocal friends, filter these friends, add nodes/edges to the graph then add them to the next queue (assuming next_queue isnt too large). 
-         # Keep adding reciprocal friend id's to the next_queue until the number of nodes in the graph + maximum possible number of nodes added to the graph in next cycle of crawl >= 100. 
-         # I.E. limit the next queue based off the anticipated # of nodes generated during the next cycle of crawling
-         for rid in queue:
-             # Calculate list of reciprocal friends sorted by follower count in descending order
-             top_recip_users = top_five_reciprocal(twitter_api,rid,5000)
-             print("User ID: " + str(rid))
-             print("Reciprocal Users: " + str(top_recip_users))
-
-             #filter top 5 users (handle/remove duplicates and dont include protected users in the graph) 
-             users_filtered = filter_top_five(twitter_api,top_recip_users,rid,my_Graph,next_queue)
-             print("Users Filtered: " + str(users_filtered))
-
-             # add the appropriate edges between the *valid* reciprocal friends
-             my_Graph.add_edges_from([(rid,y) for y in users_filtered])       
-
-             # limit the next queue based off the anticipated # of nodes generated during the next cycle of crawling.  
-             if (my_Graph.number_of_nodes() + len(next_queue)*5) < 100:
-                 next_queue += users_filtered
-                
-     return my_Graph
 
 
