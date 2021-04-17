@@ -22,14 +22,17 @@ OAUTH_TOKEN_SECRET = 'WNJMBcoyTwRNx30e1QRKzVnl0TXXW5cP0sjxQtEPSrugi'
 # t = Twitter(auth=(OAUTH_TOKEN, OAUTH_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET))
 twitter_api = myTwitterCookbook.oauth_login() #Avery's connection
 #len of q = 494
-q = "'Five Guys' OR Marios OR Sylvias OR Defontes OR Patsys OR Barbetta OR Keens OR Katzs OR Bamontes OR Frenchette OR 'The Modern' OR Cookshop" #OR 'Casa Lever' OR 'Mercer Kitchen' OR 'Charlie Bird' OR 'Le Bernardin' OR Tong OR 'Runaway Roof' OR 'La Grenouille' OR 'P.J. Clarkes' OR Soothr OR Raouls OR Forsynthia OR 'Wo Hop' OR Adda OR 'Crown Shy'" 
-q3 = "%27Five%20Guys%27"
-q2 = 'McDonalds'# OR "Five Guys"'
-test = '"Five%20Guys"%20OR%20Marios%20OR%20Sylvias%20OR%20Defontes%20OR%20Patsys%20OR%20Barbetta%20OR%20Keens%20OR%20Katzs%20OR%20Bamontes%20OR%20Frenchette%20OR%20Cookshop'
-#OR Frenchette OR 'The Modern' OR Cookshop OR 'Casa Lever' OR 'Mercer Kitchen OR 'Charlie Bird' OR 'Le Bernardin' OR 'Tong' OR 'Runaway Roof' OR 'La Grenouille' OR 'P.J. Clarke's' OR L'Artusi OR Soothr OR Raoul's OR Forsynthia  OR 'Wo Hop' OR Adda OR 'Crown Shy'\
-    #OR Mokyo OR Claro OR 'Via Carota' OR Atoboy OR 'Usha Foods' OR 'Peter Luger'\
-   # OR 'The Rainbow Room' OR Totonno's OR Delmonico's OR Rao's OR 'Nathan's Famous'\
-   # OR 'John's Pizzeria''
+q = "'Five Guys' OR Marios OR Sylvias OR Defontes OR Patsys OR Barbetta OR Keens OR Katzs OR Bamontes OR Frenchette OR 'The Modern' OR Cookshop OR 'Casa Lever' OR 'Mercer Kitchen' OR \
+'Charlie Bird' OR 'Le Bernardin' OR Tong OR 'Runaway Roof' OR 'La Grenouille' OR \
+'P.J. Clarkes' OR Soothr OR Raouls OR Forsynthia OR 'Wo Hop' OR Adda OR 'Crown Shy' OR Mokyo OR Claro OR 'Via Carota' OR Atoboy \
+OR 'Usha Foods' OR 'Peter Luger' OR 'The Rainbow Room' OR Totonnos OR Delmonicos OR Raos OR 'Nathans Famous' \
+OR 'Johns Pizzeria'"
+
+
+#test = '"Five%20Guys"%20OR%20Marios%20OR%20Sylvias%20OR%20Defontes%20OR%20Patsys%20OR%20Barbetta%20OR%20Keens%20OR%20Katzs%20OR%20Bamontes%20OR%20Frenchette%20OR%20Cookshop'
+#q3 = "%27Five%20Guys%27"
+#q2 = 'McDonalds'# OR "Five Guys"'
+
 results = myTwitterCookbook.twitter_search(twitter_api, q2, max_results=2000)
 
 # lang = 'en'
