@@ -2,9 +2,9 @@ import math
 import symspellpy
 import pkg_resources
 from symspellpy import SymSpell
-from nltk.corpus import words
-
-
+from nltk.corpus import words,stopwords
+import textblob
+import re
 
 sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
 dictionary_path = pkg_resources.resource_filename("symspellpy", "frequency_dictionary_en_82_765.txt")
@@ -51,14 +51,20 @@ class corpus:
 		self.number_of_docs = self.number_of_docs + 1
 
 
-	def normalize_tweet(self,str):
-		a = str.strip()
-		#remove any special characters and numbers from the string e.g. (!,@,#,4,5,2) 
-		l = a.split()
-		for w in l:
-			if w[0] == '@':
-				l.remove(w)
-		a = ' '.join(l)
-		r = sym_spell.lookup_compound(a, max_edit_distance = 2)
-		return r[0]._term
 
+
+    # tweet_list = [ele for ele in tweet.split() if ele != 'user']
+    # clean_tokens = [t for t in tweet_list if re.match(r'[^\W\d]*$', t)]
+    # clean_s = ' '.join(clean_tokens)
+    # clean_mess = [word for word in clean_s.split() if word.lower() not in stopwords.words('english')]
+
+#@[A-Za-z0–9]+
+def normalize_tweet(twt):
+	twtblob = twt.split()
+	twt_list = [ele for ele in twtblob if ele != 'user']
+	rm_tokens = [t for t in twt_list if re.match(r'[^\W\d]*$', t)]
+	clean_mess = [word for word in rm_tokens if word.lower() not in stopwords.words('english')]
+	#a = ' '.join(l)
+	#r = sym_spell.lookup_compound(a, max_edit_distance = 2)
+	#r[0]._term
+	return ' '.join(textblob.TextBlob(' '.join(clean_mess)).words)
