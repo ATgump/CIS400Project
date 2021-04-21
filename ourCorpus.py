@@ -14,68 +14,41 @@ bigram_path = pkg_resources.resource_filename("symspellpy", "frequency_bigramdic
 sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
 sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
-#Corpus class: A collection of text (list of tweets). Calculates TF-IDF of any word in any document in the corpus. 
-class corpus:
-	def __init__(self,doc_list = [],number_of_docs = 0):
-		self.number_of_docs = number_of_docs
-		self.doc_list = [self.normalize_tweet(d) for d in doc_list]
-
-
-	#calculate the TF-IDF of a particular word in a particular document ## Note: should split this into IDF calc then tf after
-	def TF_IDF_weight(self,word, doc): 
-		num = 0
-		#Find the number of documents in the corpus that 'word' exists
-		for d in self.doc_list:
-			if word in d:
-				num = num+1
-		try: 
-			answ = doc.split().count(word) * math.log(self.number_of_docs/num,2) # TF-IDF forumula applied
-			return answ
-		except ZeroDivisionError:
-			print("This word does not appear anywhere in the corpus")
-			return None
-	#def TF(self,word, doc):
-
-
-	def TF_IDF_feature_vector(self): ## return - [{word:TF-IDF value}] where each dict represents a vectorized tweet
-		vec = [] 
-		for doc in self.doc_list:
-			dict1 = dict()
-			for word in doc.split():
-				dict1[word] = self.TF_IDF_weight(word,doc)
-			vec.append(dict1)
-		return vec
-	
-	def add_document(self,doc):
-		self.doc_list.append(doc)
-		self.number_of_docs = self.number_of_docs + 1
-
-
-
-
     # tweet_list = [ele for ele in tweet.split() if ele != 'user']
     # clean_tokens = [t for t in tweet_list if re.match(r'[^\W\d]*$', t)]
     # clean_s = ' '.join(clean_tokens)
     # clean_mess = [word for word in clean_s.split() if word.lower() not in stopwords.words('english')]
 
 #@[A-Za-z0–9]+
+import spacy
+test_sentence = 'How am   I just finding this awesome template by @54Mr_Meyer?! Snag your own copy: https://t.co/DZOQovcLFl @SlidesManiaSM #Free resources for #GoogleSlides &amp; #PowerPoint @test'
 def normalize_tweet(twt):
 	emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)',twt) # get emoticons (to add to end important for sentiment removed during further prepro)
+	nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
 	twt = re.sub(r'\s+',' ',twt) #remove extra white space
-	twt = re.sub(r'@[A-Za-z0-9]+\s','',twt)# remove @ mentions
-	twt = re.sub(r'#[A-Za-z0-9]+\s','',twt) #remove #tags
-	twt = re.sub(r'https?://\w+\s','',twt) # remove links
+	#print('removed white space: '+twt)
+	twt = re.sub(r'@[^\s]+(\s|$)','',twt)# remove @ mentions
+	#print('removed @ mention: '+twt)
+	twt = re.sub(r'#[^\s]+(\s|$)','',twt) #remove #tags
+	#print('removed tags: '+twt)
+	twt = re.sub(r'https?://[^\s]+(\s|$)','',twt) # remove links
+	#print('removed links: '+twt)
 	twtblob = twt.split()
 	twt_list = [ele for ele in twtblob if ele != 'user']
-	rm_tokens = [t.lower() for t in twt_list if re.match(r'[^\W\d]*$', t)]
+	#print('removed user: '+twt)
+	rm_tokens = [t.lower() for t in twt_list if re.match(r'[^\W\d]*$', t)] # removes any word that has non characters in it includeing ones that dont have a space ... maybe add space in between non chars to split words so copy: -> copy : and doesnt get removed
+	#print('removed non chars: '+' '.join(rm_tokens))
 	clean_mess = [word for word in rm_tokens if not word.isspace() and word not in stopwords.words('english')]
+	#print('removed stop word: '+' '.join(clean_mess))
 	#a = ' '.join(l)
 	#r = sym_spell.lookup_compound(a, max_edit_distance = 2)
 	#r[0]._term
-	return ' '.join(textblob.TextBlob(' '.join(clean_mess)).words)+' ' + ' '.join(emoticons)
+	sentence = ' '.join(textblob.TextBlob(' '.join(clean_mess)).words)
+	doc = nlp(sentence)
+	return ' '.join([token.lemma_ for token in doc])+' ' + ' '.join(emoticons)
 
 
-
+print(normalize_tweet(test_sentence))
 
 # remove_rt = lambda x: re.sub(‘RT @\w+: ‘,” “,x)
 # rt = lambda x: re.sub(“(@[A-Za-z0–9]+)|([⁰-9A-Za-z \t])|(\w+:\/\/\S+)”,” “,x)
