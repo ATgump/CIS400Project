@@ -60,11 +60,22 @@ class corpus:
 
 #@[A-Za-z0–9]+
 def normalize_tweet(twt):
+	emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)',twt) # get emoticons (to add to end important for sentiment removed during further prepro)
+	twt = re.sub(r'\s+',' ',twt) #remove extra white space
+	twt = re.sub(r'@[A-Za-z0-9]+\s','',twt)# remove @ mentions
+	twt = re.sub(r'#[A-Za-z0-9]+\s','',twt) #remove #tags
+	twt = re.sub(r'https?://\w+\s','',twt) # remove links
 	twtblob = twt.split()
 	twt_list = [ele for ele in twtblob if ele != 'user']
-	rm_tokens = [t for t in twt_list if re.match(r'[^\W\d]*$', t)]
-	clean_mess = [word for word in rm_tokens if word.lower() not in stopwords.words('english')]
+	rm_tokens = [t.lower() for t in twt_list if re.match(r'[^\W\d]*$', t)]
+	clean_mess = [word for word in rm_tokens if not word.isspace() and word not in stopwords.words('english')]
 	#a = ' '.join(l)
 	#r = sym_spell.lookup_compound(a, max_edit_distance = 2)
 	#r[0]._term
-	return ' '.join(textblob.TextBlob(' '.join(clean_mess)).words)
+	return ' '.join(textblob.TextBlob(' '.join(clean_mess)).words)+' ' + ' '.join(emoticons)
+
+
+
+
+# remove_rt = lambda x: re.sub(‘RT @\w+: ‘,” “,x)
+# rt = lambda x: re.sub(“(@[A-Za-z0–9]+)|([⁰-9A-Za-z \t])|(\w+:\/\/\S+)”,” “,x)
