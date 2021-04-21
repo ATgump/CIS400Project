@@ -18,14 +18,13 @@ cursor = db['T'].find({},{'extended_tweet':{'full_text':1},'_id':0})
 
 neg_tweets = tweets.strings("negative_tweets.json")
 pos_tweets = tweets.strings("positive_tweets.json")
-raw_docs = neg_tweets + pos_tweets
 neg_tweets = [ourCorpus.normalize_tweet(docs) for docs in neg_tweets]
 neg_tweets = [docs for docs in neg_tweets if not docs.isspace()]
 pos_tweets = [ourCorpus.normalize_tweet(docs) for docs in pos_tweets]
 pos_tweets = [docs for docs in pos_tweets if not docs.isspace()]
-
-raw_docs = [ourCorpus.normalize_tweet(docs) for docs in raw_docs]
-raw_docs = [docs for docs in raw_docs if not docs.isspace()]
+raw_docs = neg_tweets + pos_tweets
+# raw_docs = [ourCorpus.normalize_tweet(docs) for docs in raw_docs]
+# raw_docs = [docs for docs in raw_docs if not docs.isspace()]
 
 train_d = [dict({'text':neg,'class':0}) for neg in neg_tweets] + [dict({'text':pos,'class':1}) for pos in pos_tweets]
 frame = pd.DataFrame(train_d)
@@ -34,8 +33,8 @@ frame = pd.DataFrame(train_d)
 testframe = (frame.drop('text',axis =1)).to_numpy()
 print(testframe)
 
-l = [et['extended_tweet'] for et in list(cursor)]
-l2 = [ourCorpus.normalize_tweet(et['full_text']) for et in l]
+#l = [et['extended_tweet'] for et in list(cursor)]
+#l2 = [ourCorpus.normalize_tweet(et['full_text']) for et in l]
 
 ## fit to matrix
 #min_df = 0.01,max_df=0.85
