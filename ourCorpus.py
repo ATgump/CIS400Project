@@ -40,7 +40,7 @@ end_time = datetime.datetime.now()
 print(end_time-start_time)
 
 
-
+def batch_lemmatizer(tweet_collection):
 # remove_rt = lambda x: re.sub(‘RT @\w+: ‘,” “,x)
 # rt = lambda x: re.sub(“(@[A-Za-z0–9]+)|([⁰-9A-Za-z \t])|(\w+:\/\/\S+)”,” “,x)
 
