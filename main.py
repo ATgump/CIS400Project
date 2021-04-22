@@ -74,7 +74,7 @@ print(sklearn.metrics.classification_report(y_test,pred_NB))
 
 
 #vectorizor = sk.text.TfidfVectorizer()
-#vectorizor = sk.text.TfidfVectorizer(max_features=100, stop_words='english')
+#vectorizor = sk.text.TfidfVectorizer(max_features=100, stop_words='english',token_pattern=r'[^\s]+')
 #mat2 = vectorizor.fit_transform(raw_documents = raw_docs)
 #print(vectorizor.get_feature_names())
 #neg_mat = vectorizor.transform(raw_documents = neg_tweets)
