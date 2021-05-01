@@ -11,3 +11,5 @@
 4. Correct word shortenings e.g. tmr -> tomorrow  .... do this before spelling correction so tmr -> tar doesnt happen
 
 5. Don't remove emojis then tack them on to the end of the sentence normalize them into english words e.g :) == good :D == very good :( == bad D: == very bad
+
+6. we could have more than just unigram word features but lets not
