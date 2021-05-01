@@ -17,13 +17,87 @@ sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
 from joblib import Parallel, delayed
 import spacy
+from emoji import demojize
+def load_dict_smileys():
+    
+    return {
+        ":‑)":"smiley",
+        ":-]":"smiley",
+        ":-3":"smiley",
+        ":->":"smiley",
+        "8-)":"smiley",
+        ":-}":"smiley",
+        ":)":"smiley",
+        ":]":"smiley",
+        ":3":"smiley",
+        ":>":"smiley",
+        "8)":"smiley",
+        ":}":"smiley",
+        ":o)":"smiley",
+        ":c)":"smiley",
+        ":^)":"smiley",
+        "=]":"smiley",
+        "=)":"smiley",
+        ":-))":"smiley",
+        ":‑D":"smiley",
+        "8‑D":"smiley",
+        "x‑D":"smiley",
+        "X‑D":"smiley",
+        ":D":"smiley",
+        "8D":"smiley",
+        "xD":"smiley",
+        "XD":"smiley",
+        ":‑(":"sad",
+        ":‑c":"sad",
+        ":‑<":"sad",
+        ":‑[":"sad",
+        ":(":"sad",
+        ":c":"sad",
+        ":<":"sad",
+        ":[":"sad",
+        ":-||":"sad",
+        ">:[":"sad",
+        ":{":"sad",
+        ":@":"sad",
+        ">:(":"sad",
+        ":'‑(":"sad",
+        ":'(":"sad",
+        ":‑P":"playful",
+        "X‑P":"playful",
+        "x‑p":"playful",
+        ":‑p":"playful",
+        ":‑Þ":"playful",
+        ":‑þ":"playful",
+        ":‑b":"playful",
+        ":P":"playful",
+        "XP":"playful",
+        "xp":"playful",
+        ":p":"playful",
+        ":Þ":"playful",
+        ":þ":"playful",
+        ":b":"playful",
+        "<3":"love"
+        }
+
+
+def emoji_Replacer(twt):
+	tweet_list = twt.split()
+	emoticons = load_dict_smileys()
+	edited = [emoticons[word] if word in emoticons else word for word in tweet_list]
+	tweet = ' '.join(edited)
+	tweet = demojize(tweet)
+	tweet = tweet.replace(":"," ")
+	#print(tweet)
+	return(tweet)
+
 test_sentence = 'How am   I just finkding thi\'s awegsome templatnbe by @54Mr_Meyer?! Snfag your own copy: https://t.co/DZOQovcLFl @SlidesManiaSM #Free resources for #GoogleSlides &amp; #PowerPoint @test'
-def normalize_tweet(twt):
-	twt = twt.lower()
-	emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)',twt) # get emoticons (to add to end important for sentiment removed during further prepro)
-	twt = re.sub(r'(@[^\s]+(\s|$))|(#[^\s]+(\s|$))|(https?://[^\s]+(\s|$))|(&[^\s]+(\s|$))|[^\w\s\']|\d','',twt)# remove @ mentions, #, urls, special characters besides ' , and numbers
-	twt = re.sub(r'\s+',' ',twt)
-	return (twt,emoticons)#twt + ' '.join(emoticons)
+# def normalize_tweet(twt):
+# 	twt = twt.lower()
+# 	twt = emoji_Replacer(twt)
+# 	emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)',twt) # get emoticons (to add to end important for sentiment removed during further prepro)
+# 	twt = re.sub(r'(@[^\s]+(\s|$))|(https?://[^\s]+(\s|$))|(&[^\s]+(\s|$))|[^\w\s\']|\d','',twt)# |(#[^\s]+(\s|$)) remove @ mentions, #, urls, special characters besides ' , and numbers
+# 	twt = re.sub(r'\s+',' ',twt)
+# 	return (twt)#,emoticons)#twt + ' '.join(emoticons)
 
 def chunker(tweet_list,length,chunksize):
 	return(tweet_list[pos:pos + chunksize] for pos in range(0,length,chunksize)) #return a generator for the chunks
@@ -32,17 +106,32 @@ def lemmatize_pipe(doc):
 	lemma_list = [str(tok.lemma_).lower() for tok in doc if tok.is_alpha] #and tok.text.lower() not in stopwords
 	# test spell correction here
 	s = ' '.join(lemma_list)
-	return sym_spell.lookup_compound(s,max_edit_distance=2)[0]._term.split()	
+	#print(s)
+	return s	
 	#sym_spell.lookup_compound(s, max_edit_distance = 2)[0]._term
 	#lemma_list
 
 def flatten(L):
-    return [item for S in L for item in S]
+	#print(L)
+	return [tweet for batch in L for tweet in batch]
 
 def chunk_processor(texts):
 	preproc_pipe = []
+	process = []
+	for twt in texts:
+		#print(twt)
+		twt = emoji_Replacer(twt)
+        #emoticons = re.findall('(?::|;|=)(?:-)?(?:\)|\(|D|P)',twt) # get emoticons (to add to end important for sentiment removed during further prepro)
+		twt = re.sub(r'(@[^\s]+(\s|$))|(#[^\s]+(\s|$))|(https?://[^\s]+(\s|$))|(&[^\s]+(\s|$))|[^\w\s\']|\d','',twt)# |(#[^\s]+(\s|$)) remove @ mentions, #, urls, special characters besides ' , and numbers
+		twt = re.sub(r'\s+',' ',twt)
+		twt = sym_spell.lookup_compound(twt,max_edit_distance=2)[0]._term
+		twt = twt.lower()
+		if not twt.isspace():
+			process.append(twt)
+		#print(twt)
 	nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
-	for doc in nlp.pipe(texts, batch_size=20):
+	for doc in nlp.pipe(process, batch_size=20):
+		#print(doc)
 		preproc_pipe.append(lemmatize_pipe(doc))
 	return preproc_pipe
 
@@ -53,9 +142,16 @@ def batch_lemmatizer(texts,chunksize=100):
 	result = executor(tasks)
 	return flatten(result)
 
-print(normalize_tweet(test_sentence))
-
-print(sym_spell.lookup_compound(normalize_tweet(test_sentence)[0], max_edit_distance = 2)[0]._term)
+#print(normalize_tweet(test_sentence))
+# nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
+# doc = nlp.pipe([test_sentence],batch_size=1)
+# for docs in doc:
+# 	print(docs)
+# 	lemma_list = [str(tok.lemma_).lower() for tok in docs if tok.is_alpha]
+# print(lemma_list)
+# s = ' '.join(lemma_list)
+# print(s)
+# print(sym_spell.lookup_compound(s,max_edit_distance=2)[0]._term.split())
 ## split regexs
 
 	# twt = re.sub(r'\s+',' ',twt) #remove extra white space
