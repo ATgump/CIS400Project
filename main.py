@@ -19,26 +19,30 @@ if __name__ == "__main__":
 
     neg_tweets = tweets.strings("negative_tweets.json")
     pos_tweets = tweets.strings("positive_tweets.json")
-    neg_tweets = [ourCorpus.normalize_tweet(docs) for docs in neg_tweets]
-    neg_tweets = [docs for docs in neg_tweets if not docs[0].isspace()]
-    pos_tweets = [ourCorpus.normalize_tweet(docs) for docs in pos_tweets]
-    pos_tweets = [docs for docs in pos_tweets if not docs[0].isspace()]
-    raw_docs = neg_tweets + pos_tweets
-    pos_frame = pd.DataFrame(pos_tweets,columns = ['pos_tweet','p_emotes'])
-    neg_frame = pd.DataFrame(neg_tweets,columns = ['neg_tweet','n_emotes'])
-    nf = pd.concat([pos_frame,neg_frame],axis = 1)
-    print(nf)
+    # neg_tweets = [ourCorpus.normalize_tweet(docs) for docs in neg_tweets]
+    # neg_tweets = [docs for docs in neg_tweets if not docs[0].isspace()]
+    # pos_tweets = [ourCorpus.normalize_tweet(docs) for docs in pos_tweets]
+    # pos_tweets = [docs for docs in pos_tweets if not docs[0].isspace()]
+    # raw_docs = neg_tweets + pos_tweets
+    # pos_frame = pd.DataFrame(pos_tweets,columns = ['pos_tweet','p_emotes'])
+    # neg_frame = pd.DataFrame(neg_tweets,columns = ['neg_tweet','n_emotes'])
+    # nf = pd.concat([pos_frame,neg_frame],axis = 1)
+    nf = pd.DataFrame()
+    # print(nf)
     
-    tf5 = pd.DataFrame(raw_docs)
+    #tf5 = pd.DataFrame(raw_docs)
     #print(tf5)
     #raw_docs = ourCorpus.batch_lemmatizer(raw_docs,100)
     #raw_docs = [twt for (twt,emote) in raw_docs]
-    nf['pos_lema'] = (pd.Series(ourCorpus.batch_lemmatizer(nf['pos_tweet'],100)) + nf['p_emotes']).apply(lambda x: ' '.join(x))
-    nf['neg_lema'] = (pd.Series(ourCorpus.batch_lemmatizer(nf['neg_tweet'],100)) + nf['n_emotes']).apply(lambda x: ' '.join(x))
+    # nf['pos_lema'] = (pd.Series(ourCorpus.batch_lemmatizer(nf['pos_tweet'],100)) + nf['p_emotes']).apply(lambda x: ' '.join(x))
+    # nf['neg_lema'] = (pd.Series(ourCorpus.batch_lemmatizer(nf['neg_tweet'],100)) + nf['n_emotes']).apply(lambda x: ' '.join(x))
+    nf['pos_lema'] = (pd.Series(ourCorpus.batch_lemmatizer(pos_tweets,100)))
+    nf['neg_lema'] = (pd.Series(ourCorpus.batch_lemmatizer(neg_tweets,100)))
 
     # tf5['lema'] = ourCorpus.batch_lemmatizer(tf5[0],100)
     # tf5['connect'] = (tf5['lema'] + tf5[1]).apply(lambda x: ' '.join(x))
-    print(nf.drop(columns =['pos_tweet','neg_tweet','p_emotes','n_emotes']))
+    #print(nf.drop(columns =['pos_tweet','neg_tweet','p_emotes','n_emotes']))
+    print(nf)
 
     #print(tf5)
     #raw_docs = [' '.join(doc) for doc in raw_docs]
