@@ -1,0 +1,176 @@
+MLP_Classifier_Report(1):
+
+    parameter_space = {
+    'hidden_layer_sizes': 
+    [
+    (10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10),
+    (64,64,64,64,64,64,64,64),
+    (10,10,100,50,20,10),                                                                                                         
+    ],
+    'activation':['tanh', 'relu'],
+    'solver':['sgd','adam'],
+    'alpha':[.0001,.0000000001,.005,.05],
+    'learning_rate':['constant','adaptive'] 
+}
+
+
+
+[CV 3/3; 16/96] (3 folds, 96 combinations, = 288 fits)
+
+
+Best parameters found:
+ {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.878 (+/-0.021) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.882 (+/-0.001) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'adam'}
+0.892 (+/-0.003) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.883 (+/-0.001) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.897 (+/-0.003) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.870 (+/-0.004) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.895 (+/-0.008) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.870 (+/-0.005) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.507 (+/-0.190) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.464 (+/-0.077) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.885 (+/-0.022) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.872 (+/-0.007) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'adam'}
+0.888 (+/-0.003) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.875 (+/-0.002) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.892 (+/-0.011) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.850 (+/-0.016) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.888 (+/-0.018) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.853 (+/-0.006) for {'activation': 'tanh', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.890 (+/-0.001) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.886 (+/-0.004) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'adam'}
+0.883 (+/-0.019) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.891 (+/-0.004) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.874 (+/-0.035) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.886 (+/-0.001) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.898 (+/-0.005) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.884 (+/-0.003) for {'activation': 'tanh', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.892 (+/-0.005) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.892 (+/-0.004) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'adam'}
+0.889 (+/-0.019) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.889 (+/-0.006) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.894 (+/-0.003) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.890 (+/-0.002) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.896 (+/-0.005) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.890 (+/-0.003) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.895 (+/-0.007) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'adam'}
+0.590 (+/-0.423) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.898 (+/-0.003) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.875 (+/-0.013) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.873 (+/-0.005) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.881 (+/-0.006) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.888 (+/-0.006) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.867 (+/-0.009) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.865 (+/-0.007) for {'activation': 'relu', 'alpha': 1e-10, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.900 (+/-0.004) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.901 (+/-0.004) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.875 (+/-0.040) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.587 (+/-0.416) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.884 (+/-0.016) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+ayer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'constant', 'solver': 'adam'}
+0.440 (+/-0.000) for {'activation': 'relu', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'sgd'}
+0.889 (+/-0.022) for {'activation': 'relu', 'alpha': 0.05, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+
+
+
+
+MLP_Classifier_Report(2): 
+
+state = 1016102622
+Fitting 3 folds for each of 5 candidates, totalling 15 fits
+
+
+Best parameters found:
+ {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
+
+
+0.897 (+/-0.003) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.883 (+/-0.009) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (10, 10, 100, 50, 20, 10), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.899 (+/-0.005) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (80, 80, 80, 80, 80, 80, 80, 80), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.735 (+/-0.417) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.903 (+/-0.004) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
+
+
+
+MLP_Classifier_Report(3):
+
+state = 1016102622
+Fitting 3 folds for each of 4 candidates, totalling 12 fits
+
+Best parameters found:
+ {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
+
+ 
+0.906 (+/-0.006) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.899 (+/-0.001) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (128, 128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.903 (+/-0.004) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.904 (+/-0.003) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
+
+
+Best parameters found:
+ {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.892 (+/-0.008) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (128, 128, 128, 128, 128, 128, 128, 128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.893 (+/-0.008) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.897 (+/-0.004) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (128, 128, 128, 128, 128, 128, 128, 128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.901 (+/-0.003) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
+
+
+
+
+
+
+
+
+
+Best parameters found:
+ {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.897 (+/-0.004) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}    
+0.889 (+/-0.003) for {'activation': 'relu', 'alpha': 1e-73, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}     
+0.895 (+/-0.008) for {'activation': 'relu', 'alpha': 0.05, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}      
+0.884 (+/-0.006) for {'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}    
+0.875 (+/-0.006) for {'activation': 'tanh', 'alpha': 1e-73, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}     
+0.884 (+/-0.007) for {'activation': 'tanh', 'alpha': 0.05, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}      
+0.833 (+/-0.003) for {'activation': 'identity', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
+0.813 (+/-0.017) for {'activation': 'identity', 'alpha': 1e-73, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'} 
+0.860 (+/-0.006) for {'activation': 'identity', 'alpha': 0.05, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}  
