@@ -99,9 +99,11 @@ def chunker(tweet_list,length,chunksize):
 	return(tweet_list[pos:pos + chunksize] for pos in range(0,length,chunksize)) #return a generator for the chunks
 q4 =['mcdonald', 'wendy', 'burger', 'starbuck', 'king', 'pizza', 'hut', 'inonu', 'white', 'castle', 'auntie', 'news', 'popeye', 'chick', 'fila', 'taco', 'bell', 'abyss', 'dairy' ,'queen']
 words = set(q4) | set(stopwords.words('english')) | set(['face'])
+
 def lemmatize_pipe(doc):
 	lemma_list = [str(tok.lemma_).lower() for tok in doc if tok.is_alpha and str(tok.lemma_).lower() not in words] #and tok.text.lower() not in stopwords tok.text.lower()
 	s = ' '.join(lemma_list)
+	#print(s)
 	return s	
 
 
@@ -114,16 +116,30 @@ def chunk_processor(texts):
 	process = []
 	for twt in texts:
 		#print(twt)
-		twt = re.sub(r"http\S+", "", twt)
+		#twt = re.sub(r"http\S+", "", twt)
 		twt = re.sub(r'https?:\/\/[^\s]+(\s|$)','',twt)
-		twt = re.sub(r'^https?:\/\/.*[\r\n]*', '', twt, flags=re.MULTILINE)
+		#print(twt)
+		#twt = re.sub(r'^https?:\/\/.*[\r\n]*', '', twt, flags=re.MULTILINE)
 		twt = BeautifulSoup(twt,features="html.parser").get_text()
+		#print(twt)
 		twt = emoji_Replacer(twt)
 		#print(twt)
-		twt = re.sub(r'(@[^\s]+(\s|$))|(#[^\s]+(\s|$))|(&[^\s]+(\s|$))|[^\w\s\']|\d','',twt)# |(#[^\s]+(\s|$)) remove @ mentions, #, urls, special characters besides ' , and numbers |(https?:\/\/[^\s]+(\s|$))
+		twt = re.sub(r'(@[^\s]+(\s|$))','',twt)# |(#[^\s]+(\s|$)) remove @ mentions, #, urls, special characters besides ' , and numbers |(https?:\/\/[^\s]+(\s|$))
+		#print(twt)
+		twt = re.sub(r'(#[^\s]+(\s|$))','',twt)
+		#print(twt)
+		# twt = re.sub(r'(&[^\s]+(\s|$))','',twt)
+		# print(twt)
+		twt = re.sub(r'[^\w\s\']','',twt) 
+		#print(twt)
+		twt = re.sub(r'\d','',twt)
+		#print(twt)
 		twt = re.sub(r'\s+',' ',twt)
+		#print(twt)
 		twt = sym_spell.lookup_compound(twt,max_edit_distance=2)[0]._term
+		#print(twt)
 		twt = twt.lower()
+		#print(twt)
 		process.append(twt)
 		#print(twt)
 	nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
@@ -135,26 +151,27 @@ def chunk_processor(texts):
 	return preproc_pipe
 
 def batch_lemmatizer(texts,chunksize=100):
-	executor = Parallel(n_jobs=6, backend='multiprocessing', prefer="processes")
+	executor = Parallel(n_jobs=4, backend='multiprocessing', prefer="processes")
 	do = delayed(chunk_processor)
 	tasks = (do(chunk) for chunk in chunker(texts, len(texts), chunksize=chunksize))
 	result = executor(tasks)
 	return flatten(result)
 
 
-if __name__ == "__main__":
-	client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
-	db = client['tweet_DB']
-	df = pd.DataFrame(list(db['labeled_Training_Data'].find({},{'_id':0,'text':1,'label':1})))
-	df['label'].replace(to_replace = 'pos',value = 4,inplace = True)
-	df['label'].replace(to_replace = 'neut',value = 2,inplace = True)
-	df['label'].replace(to_replace = 'neg',value = 0,inplace = True)
-	df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50)))
-	df = df[df['lema_text'] != '']
+# if __name__ == "__main__":
+	# client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
+	# db = client['tweet_DB']
+	# #df = pd.DataFrame(list(db['labeled_Training_Data'].find({},{'_id':0,'text':1,'label':1})))
+	# df = pd.DataFrame(list(db['testing_Tweets_Labeled'].find({},{'_id':0,'text':1,'label':1})))
+	# df['label'].replace(to_replace = 'pos',value = 4,inplace = True)
+	# df['label'].replace(to_replace = 'neut',value = 2,inplace = True)
+	# df['label'].replace(to_replace = 'neg',value = 0,inplace = True)
+	# df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50)))
+	# df = df[df['lema_text'] != '']
 
-	db.processed_Training_Data_Three.insert_many(df.to_dict('records'))
-	# test2 = '@hiyorihere Chick-fil-A https://t.co/HBlpCzX4sq'
-	# print(str(batch_lemmatizer([test2])))
+	# db.test_Tweets_Processed.insert_many(df.to_dict('records'))
+	# # test2 = '@hiyorihere Chick-fil-A https://t.co/HBlpCzX4sq'
+	# # print(str(batch_lemmatizer([test2])))
 
 
 

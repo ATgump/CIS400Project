@@ -5,6 +5,7 @@ import pymongo
 import json
 import sklearn
 import sklearn.naive_bayes
+import joblib
 from sklearn import svm
 from sklearn.neural_network import MLPClassifier
 from sklearn import feature_extraction as sk
@@ -19,32 +20,50 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import LinearSVC
+import pickle
 #mongo connection
-if __name__ == "__main__":
-    pd.set_option('display.max_rows', 500)
-    n = random.randint(0, 2**32 - 20)
+
+#@Sparkywoomy A freshsalad of all fruits &amp; vegetables is a part of the McSparky meald availableee noaw at your nearest McDonalds staore. #trending 😠😠😠 https://t.co/KhWTXElnJb &gt; (a $100 value) :)
+
+
+
+client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
+db = client['tweet_DB']
+
+
+df = pd.DataFrame(list(db['processed_Training_Data_Three'].find({},{'_id':0,'lema_text':1,'label':1})))
+
+
+vectorizor = sk.text.TfidfVectorizer(min_df=.000027) #stop_words=sk._stop_words.ENGLISH_STOP_WORDS,min_df=.00003,max_df=.94
+v = vectorizor.fit_transform(df['lema_text'].to_numpy())
+TF_Vec = 'TFIDF_Vectorizer.sav'
+joblib.dump(vectorizor, TF_Vec)
+# if __name__ == "__main__":
+#     pd.set_option('display.max_rows', 500)
+#     n = random.randint(0, 2**32 - 20)
     #q4 = ["McDonalds","Wendys",'Burger King','Pizza Hut',"Whataburger","In-N-OutBurger","White Castle","Starbucks","Auntie Anne\'s","Popeyes","Chick-fil-A",'Taco Bell',"Arby\'s","Dairy Queen"]
     #print(ourCorpus.batch_lemmatizer(q4))
 
-    client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
-    db = client['tweet_DB']
+    # client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
+    # db = client['tweet_DB']
 
 
-    df = pd.DataFrame(list(db['processed_Training_Data_Three'].find({},{'_id':0,'lema_text':1,'label':1})))
+    # df = pd.DataFrame(list(db['processed_Training_Data_Three'].find({},{'_id':0,'lema_text':1,'label':1})))
 
 
-    vectorizor = sk.text.TfidfVectorizer(min_df=.000027) #stop_words=sk._stop_words.ENGLISH_STOP_WORDS,min_df=.00003,max_df=.94
-    v = vectorizor.fit_transform(df['lema_text'].to_numpy())
+    # vectorizor = sk.text.TfidfVectorizer(min_df=.000027) #stop_words=sk._stop_words.ENGLISH_STOP_WORDS,min_df=.00003,max_df=.94
+    # v = vectorizor.fit_transform(df['lema_text'].to_numpy())
+    # TF_Vec = 'TFIDF_Vectorizer.pkl'
+    # joblib.dump(v, TF_Vec)
 
-
-    #print("Random state = " + str(n))
-    X_train,X_test,y_train,y_test = sklearn.model_selection.train_test_split(v,df['label'],test_size=.2,random_state=n) #tframe.drop('CLASS_ATR',axis = 1),tframe['CLASS_ATR']
+    # print("Random state = " + str(n))
+    # X_train,X_test,y_train,y_test = sklearn.model_selection.train_test_split(v,df['label'],test_size=.2,random_state=n) #tframe.drop('CLASS_ATR',axis = 1),tframe['CLASS_ATR'] 1016102622
     
     
     # MNB_classifier=sklearn.naive_bayes.MultinomialNB()
     # MNB_classifier.fit(X_train,y_train)
-
-    mlp = MLPClassifier(max_iter=500) #max_iter=250
+    # activation = 'relu',alpha = 0.0001, hidden_layer_sizes=(256, 256, 256, 256, 256, 256, 256, 256, 256),learning_rate='constant',max_iter=1000,solver='adam'
+    # mlp = MLPClassifier(hidden_layer_sizes=(256,256,256,256)) #max_iter=250
     # mlp.fit(X_train,y_train)
 
     # SV_classifier = svm.SVC()
@@ -61,6 +80,16 @@ if __name__ == "__main__":
 
     # LSV_classifier = LinearSVC()
     # LSV_classifier.fit(X_train,y_train)
+    
+    # MLPC = 'Multi_Layer_Perceptron_Trained_Model.sav'
+    # joblib.dump(mlp, MLPC)
+
+    # RFC = 'Random_Forest_Trained_Model.sav'
+    # joblib.dump(RF_classifier, RFC)
+
+    # LSVC = 'Linear_Support_Vector_Trained_Model.sav'
+    # joblib.dump(LSV_classifier, LSVC)
+
 
 #     print("Multinomial Naive Bayes Classifier Report: \t\t")
 #     pred_MNB = MNB_classifier.predict(X_test)
@@ -91,45 +120,49 @@ if __name__ == "__main__":
     # print(sklearn.metrics.classification_report(y_test,pred_LSV))
 
 
-    parameter_space = {
-    'hidden_layer_sizes': 
-    [
-    #(50,50,50,50,50,50,50,50,50,50,50,50,50,50,50), 
-    #(500,500,500),  
-    #(10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10),
-    #(64,64,64,64,64,64,64,64), 
-    #(128,128,128,128,128,128,128,128),
-    #(10,10,100,50,20,10),
-    #(80,80,80,80,80,80,80,80),
-    #(32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32),
-    #(10,10,10),
-    #(256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256),
-    #(256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256,256,256,256,256),
-    (256,256,256,256,256,256,256,256,256),
-    #(256,256,256,256,256,256,256,256,256,256,256,256,128,56,10,6),
-    #(128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128),
-    #(500,500)
-    #(200,10,10,10,10,10,10,10,10,200),
-    #(10,200,200,10)                                                                                                            
-    ],
-    'activation':['relu'], #'tanh','identity', 'logistic'
-    'solver':['adam'], #'sgd','lbfgs'
-    'alpha':[.0001], #.0001,.0000000001,.0002,.0007,.0000000000000000000000000000000000000000000000000000000000000000000000001,.05
-    'learning_rate':['adaptive','constant','invscaling'] #'constant','invscaling'
-}
+#     parameter_space = {
+#     'max_iter':[200,1000],    
+#     'hidden_layer_sizes': 
+#     [
+#         (100,),
+#         (100,100,100),
+#         (256,256,256,256),
+#     #(50,50,50,50,50,50,50,50,50,50,50,50,50,50,50), 
+#     #(500,500,500),  
+#     #(10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10),
+#     #(64,64,64,64,64,64,64,64), 
+#     #(128,128,128,128,128,128,128,128),
+#     #(10,10,100,50,20,10),
+#     #(80,80,80,80,80,80,80,80),
+#     #(32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32),
+#     #(10,10,10),
+#     #(256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256),
+#     #(256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256,256,256,256,256),
+#     #(256,256,256,256,256,256,256,256,256),
+#     #(256,256,256,256,256,256,256,256,256,256,256,256,128,56,10,6),
+#     #(128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128,128),
+#     #(500,500)
+#     #(200,10,10,10,10,10,10,10,10,200),
+#     #(10,200,200,10)                                                                                                            
+#     ],
+#     #'activation':['relu'], #'tanh','identity', 'logistic'
+#     #'solver':['adam'], #'sgd','lbfgs'
+#     #'alpha':[.0001], #.0001,.0000000001,.0002,.0007,.0000000000000000000000000000000000000000000000000000000000000000000000001,.05
+#     #'learning_rate':['constant'] #'adaptive','constant','invscaling'
+# }
 
-    clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=3,verbose = 100)
-    clf.fit(X_train, y_train)
+#     clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=2,verbose = 100)
+#     clf.fit(X_train, y_train)
 
 
-    # Best paramete set
-    print('Best parameters found:\n', clf.best_params_)
+#     # Best paramete set
+#     print('Best parameters found:\n', clf.best_params_)
 
-    # All results
-    means = clf.cv_results_['mean_test_score']
-    stds = clf.cv_results_['std_test_score']
-    for mean, std, params in zip(means, stds, clf.cv_results_['params']):
-        print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
+#     # All results
+#     means = clf.cv_results_['mean_test_score']
+#     stds = clf.cv_results_['std_test_score']
+#     for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+#         print("%0.3f (+/-%0.03f) for %r" % (mean, std * 2, params))
 
 
 

@@ -148,6 +148,8 @@ Best parameters found:
 0.904 (+/-0.003) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (64, 64, 64, 64, 64, 64, 64, 64), 'learning_rate': 'adaptive', 'solver': 'adam'}
 
 
+
+Fitting 3 folds for each of 4 candida
 Best parameters found:
  {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
 0.892 (+/-0.008) for {'activation': 'relu', 'alpha': 0.005, 'hidden_layer_sizes': (128, 128, 128, 128, 128, 128, 128, 128, 128, 128), 'learning_rate': 'adaptive', 'solver': 'adam'}
@@ -162,7 +164,7 @@ Best parameters found:
 
 
 
-
+Fitting 3 folds for each of 9 candida
 Best parameters found:
  {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
 0.897 (+/-0.004) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}    
@@ -174,3 +176,31 @@ Best parameters found:
 0.833 (+/-0.003) for {'activation': 'identity', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}
 0.813 (+/-0.017) for {'activation': 'identity', 'alpha': 1e-73, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'} 
 0.860 (+/-0.006) for {'activation': 'identity', 'alpha': 0.05, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'solver': 'adam'}  
+
+
+
+Fitting 3 folds for each of 3 candida
+Best parameters found:
+ {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'constant', 'max_iter': 500, 'solver': 'adam'}
+0.899 (+/-0.003) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'adaptive', 'max_iter': 500, 'solver': 'adam'}
+0.902 (+/-0.003) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'constant', 'max_iter': 500, 'solver': 'adam'}
+0.898 (+/-0.001) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'invscaling', 'max_iter': 500, 'solver': 'adam'}
+
+
+
+
+
+
+
+
+
+
+
+Fitting 3 folds for each of 4 candidates, totalling 12 fits
+
+Best parameters found:
+ {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'constant', 'max_iter': 1000, 'solver': 'adam'}
+0.897 (+/-0.003) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'constant', 'max_iter': 200, 'solver': 'adam'}
+0.899 (+/-0.006) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'constant', 'max_iter': 500, 'solver': 'adam'}
+0.902 (+/-0.003) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'constant', 'max_iter': 1000, 'solver': 'adam'}
+0.899 (+/-0.005) for {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (256, 256, 256, 256, 256, 256, 256, 256, 256), 'learning_rate': 'constant', 'max_iter': 10000, 'solver': 'adam'}
