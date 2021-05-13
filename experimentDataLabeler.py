@@ -85,7 +85,7 @@ if __name__ == "__main__":
 	mConnection = 'mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true'
 	client = pymongo.MongoClient(mConnection)
 	db = client['tweet_DB']
-	cursor = db['experimental_Data_McDonalds'].find({},{'text':1,'_id':0})
+	cursor = db['experimental_Data_Wendys'].find({},{'text':1,'_id':0})
 	df = pd.DataFrame(list(cursor))
 	print(df)
 	df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50)))
@@ -95,5 +95,5 @@ if __name__ == "__main__":
 	print(pd.DataFrame(labeled))
 	
 	### JUST FOR INSERTING (leave commented) ##
-	db['exp_Data_McD_Combined'].insert_many(labeled)
+	db['exp_Data_Wendys_Combined'].insert_many(labeled)
 
