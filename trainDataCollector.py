@@ -18,6 +18,7 @@ def connect_to_twitter_OAuth():
     api = tweepy.API(auth)
     return api
 
+## Class for tweepy stream listener
 class StreamListener(tweepy.StreamListener):
     tweet_counter = 0
     def __init__(self, api=None):
@@ -41,7 +42,8 @@ class StreamListener(tweepy.StreamListener):
             db_add['entities'] = status._json['entities']
 
             ## Save to mongo/print tweet ## 
-            db.unprocessed_Tweets.insert_one(db_add)
+            #db.unprocessed_Tweets.insert_one(db_add)
+            
             print('# of tweets collected:: '+str(self.tweet_counter))
             print(db_add['text'])
         else:

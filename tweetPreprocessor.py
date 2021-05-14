@@ -90,8 +90,6 @@ def emoji_Replacer(twt):
 	tweet = tweet.replace(":"," ")
 	return(tweet)
 
-test_sentence = 'How am   wendy burger king I just finkding thi\'s awegsome templatnbe by @54Mr_Meyer?! Snfag your own copy: https://t.co/DZOQovcLFl @SlidesManiaSM #Free resources for #GoogleSlides &amp; #PowerPoint @test'
-
 # Return a generator for the chunks
 def chunker(tweet_list,length,chunksize):
 	return(tweet_list[pos:pos + chunksize] for pos in range(0,length,chunksize)) 
@@ -100,12 +98,13 @@ def chunker(tweet_list,length,chunksize):
 q4 =['mcdonald', 'wendy', 'burger', 'starbuck', 'king', 'pizza', 'hut', 'inonu', 'white', 'castle', 'auntie', 'news', 'popeye', 'chick', 'fila', 'taco', 'bell', 'abyss', 'dairy' ,'queen']
 words = set(q4) | set(stopwords.words('english')) | set(['face'])
 
+#Perform Lemmatization and stop word removal
 def lemmatize_pipe(doc):
 	lemma_list = [str(tok.lemma_).lower() for tok in doc if tok.is_alpha and str(tok.lemma_).lower() not in words] ## remove stop words and lemmatize
 	s = ' '.join(lemma_list)
 	return s	
 
-## Flatten list of list to list of tweets
+## Flatten list of lists to list of tweets
 def flatten(L):
 	return [tweet for batch in L for tweet in batch]
 
@@ -138,7 +137,7 @@ def chunk_processor(texts):
 		process.append(twt)
 		#print(twt)
 	
-	## Use space pipeline for optimized lemmatizing 
+	## Use spaCy pipeline for optimized lemmatizing 
 	nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
 	for doc in nlp.pipe(process, batch_size=20):
 		preproc_pipe.append(lemmatize_pipe(doc))
@@ -146,31 +145,35 @@ def chunk_processor(texts):
 
 ## Batching for parallel computing
 def batch_lemmatizer(texts,chunksize=100):
-	executor = Parallel(n_jobs=4, backend='multiprocessing', prefer="processes")
+	executor = Parallel(n_jobs=1, backend='multiprocessing', prefer="processes")
 	do = delayed(chunk_processor)
 	tasks = (do(chunk) for chunk in chunker(texts, len(texts), chunksize=chunksize))
 	result = executor(tasks)
 	return flatten(result)
 
+#Do preprocessing
+if __name__ == "__main__":
+	client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
+	db = client['tweet_DB']
 
-# if __name__ == "__main__":
-	# client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
-	# db = client['tweet_DB']
+	df = pd.DataFrame(list(db['labeled_Training_Data'].find({},{'_id':0,'text':1,'label':1})))
+	print(df)
+	## replace string labels with integer values 
+	## (was a mistake to label as strings but this was quicker/easier than relabeling)
+	df['label'].replace(to_replace = 'pos',value = 4,inplace = True)
+	df['label'].replace(to_replace = 'neut',value = 2,inplace = True)
+	df['label'].replace(to_replace = 'neg',value = 0,inplace = True)
 
-	# #df = pd.DataFrame(list(db['labeled_Training_Data'].find({},{'_id':0,'text':1,'label':1})))
+	df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50))) ## preprocess the text
+	df = df[df['lema_text'] != '']
+	print(df)
 
-
-	# df['label'].replace(to_replace = 'pos',value = 4,inplace = True)
-	# df['label'].replace(to_replace = 'neut',value = 2,inplace = True)
-	# df['label'].replace(to_replace = 'neg',value = 0,inplace = True)
-
-	# df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50)))
-	# df = df[df['lema_text'] != '']
-
+	### JUST FOR INSERTING (leave commented) ##
 	# db.processed_Training_Data_Three.insert_many(df.to_dict('records'))
 
-
-
+	### Single tweet to test preprocessing steps (used in presentation) ###
+	# string = '@Sparkywoomy A freshsalad of all fruits &amp; vegetables is a part of the McSparky meald availableee noaw at your nearest McDonalds staore. #trending 😠😠😠 https://t.co/KhWTXElnJb &gt; (a $100 value) :)'
+	# batch_lemmatizer([string])
 
 
 
