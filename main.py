@@ -29,15 +29,9 @@ from sklearn.metrics import RocCurveDisplay
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import PrecisionRecallDisplay
 
-#mongo connection
-
-#@Sparkywoomy A freshsalad of all fruits &amp; vegetables is a part of the McSparky meald availableee noaw at your nearest McDonalds staore. #trending 😠😠😠 https://t.co/KhWTXElnJb &gt; (a $100 value) :)
-
 if __name__ == "__main__":
 	pd.set_option('display.max_rows', 500)
 	n = random.randint(0, 2**32 - 20)
-	#q4 = ["McDonalds","Wendys",'Burger King','Pizza Hut',"Whataburger","In-N-OutBurger","White Castle","Starbucks","Auntie Anne\'s","Popeyes","Chick-fil-A",'Taco Bell',"Arby\'s","Dairy Queen"]
-	#print(ourCorpus.batch_lemmatizer(q4))
 
 	client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
 	db = client['tweet_DB']
@@ -57,7 +51,7 @@ if __name__ == "__main__":
 	
 	# MNB_classifier=sklearn.naive_bayes.MultinomialNB()
 	# MNB_classifier.fit(X_train,y_train)
-	# activation = 'relu',alpha = 0.0001, hidden_layer_sizes=(256, 256, 256, 256, 256, 256, 256, 256, 256),learning_rate='constant',max_iter=1000,solver='adam'
+	
 	# mlp = MLPClassifier() #max_iter=250
 	# mlp.fit(X_train,y_train)
 

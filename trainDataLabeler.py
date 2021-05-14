@@ -1,7 +1,8 @@
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from joblib import Parallel, delayed
 from textblob import TextBlob
-
+import pymongo
+import pandas as pd
 def chunker(tweet_list,length,chunksize):
 	return(tweet_list[pos:pos + chunksize] for pos in range(0,length,chunksize)) # return a generator for the chunks
 
@@ -37,6 +38,6 @@ if __name__ == "__main__":
 	print(df)
 	labeled = batch_labeler(df['text'],chunksize=256 )
 	print(pd.DataFrame(labeled))
-	
+
 	### JUST FOR INSERTING (leave commented) ##
 	#db['labeled_Training_Data'].insert_many(labeled)
