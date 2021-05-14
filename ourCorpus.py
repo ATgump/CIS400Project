@@ -1,15 +1,15 @@
-import math
-import symspellpy
 import pkg_resources
 from symspellpy import SymSpell
 from nltk.corpus import words,stopwords
-import textblob
 import re
-import datetime
-from sklearn import feature_extraction as sk
 from bs4 import BeautifulSoup
 import pymongo
 import pandas as pd
+from joblib import Parallel, delayed
+import spacy
+from emoji import demojize
+
+## Setup Symspell ##
 sym_spell = SymSpell(max_dictionary_edit_distance=2, prefix_length=7)
 dictionary_path = pkg_resources.resource_filename("symspellpy", "frequency_dictionary_en_82_765.txt")
 bigram_path = pkg_resources.resource_filename("symspellpy", "frequency_bigramdictionary_en_243_342.txt")
@@ -18,9 +18,7 @@ bigram_path = pkg_resources.resource_filename("symspellpy", "frequency_bigramdic
 sym_spell.load_dictionary(dictionary_path, term_index=0, count_index=1)
 sym_spell.load_bigram_dictionary(bigram_path, term_index=0, count_index=2)
 
-from joblib import Parallel, delayed
-import spacy
-from emoji import demojize
+## Dictionary for emoticon conversion ## 
 def load_dict_smileys():
 	
 	return {
@@ -82,7 +80,7 @@ def load_dict_smileys():
 		"<3":"love"
 		}
 
-
+## Replace emojis and emoticons
 def emoji_Replacer(twt):
 	tweet_list = twt.split()
 	emoticons = load_dict_smileys()
@@ -90,66 +88,63 @@ def emoji_Replacer(twt):
 	tweet = ' '.join(edited)
 	tweet = demojize(tweet)
 	tweet = tweet.replace(":"," ")
-	#print(tweet)
 	return(tweet)
 
 test_sentence = 'How am   wendy burger king I just finkding thi\'s awegsome templatnbe by @54Mr_Meyer?! Snfag your own copy: https://t.co/DZOQovcLFl @SlidesManiaSM #Free resources for #GoogleSlides &amp; #PowerPoint @test'
 
+# Return a generator for the chunks
 def chunker(tweet_list,length,chunksize):
-	return(tweet_list[pos:pos + chunksize] for pos in range(0,length,chunksize)) #return a generator for the chunks
+	return(tweet_list[pos:pos + chunksize] for pos in range(0,length,chunksize)) 
+
+# Create set of stopwords to remove 
 q4 =['mcdonald', 'wendy', 'burger', 'starbuck', 'king', 'pizza', 'hut', 'inonu', 'white', 'castle', 'auntie', 'news', 'popeye', 'chick', 'fila', 'taco', 'bell', 'abyss', 'dairy' ,'queen']
 words = set(q4) | set(stopwords.words('english')) | set(['face'])
 
 def lemmatize_pipe(doc):
-	lemma_list = [str(tok.lemma_).lower() for tok in doc if tok.is_alpha and str(tok.lemma_).lower() not in words] #and tok.text.lower() not in stopwords tok.text.lower()
+	lemma_list = [str(tok.lemma_).lower() for tok in doc if tok.is_alpha and str(tok.lemma_).lower() not in words] ## remove stop words and lemmatize
 	s = ' '.join(lemma_list)
-	#print(s)
 	return s	
 
-
+## Flatten list of list to list of tweets
 def flatten(L):
-	#print(L)
 	return [tweet for batch in L for tweet in batch]
 
+## Process Tweets in batches
 def chunk_processor(texts):
 	preproc_pipe = []
 	process = []
 	for twt in texts:
 		#print(twt)
-		#twt = re.sub(r"http\S+", "", twt)
-		twt = re.sub(r'https?:\/\/[^\s]+(\s|$)','',twt)
+		twt = re.sub(r'https?:\/\/[^\s]+(\s|$)','',twt) ## remove URLs
 		#print(twt)
-		#twt = re.sub(r'^https?:\/\/.*[\r\n]*', '', twt, flags=re.MULTILINE)
-		twt = BeautifulSoup(twt,features="html.parser").get_text()
+		twt = BeautifulSoup(twt,features="html.parser").get_text() ## convert html tags
 		#print(twt)
-		twt = emoji_Replacer(twt)
+		twt = emoji_Replacer(twt) ## remove emojis/emoticons
 		#print(twt)
-		twt = re.sub(r'(@[^\s]+(\s|$))','',twt)# |(#[^\s]+(\s|$)) remove @ mentions, #, urls, special characters besides ' , and numbers |(https?:\/\/[^\s]+(\s|$))
+		twt = re.sub(r'(@[^\s]+(\s|$))','',twt) ## remove @mentions
 		#print(twt)
-		twt = re.sub(r'(#[^\s]+(\s|$))','',twt)
+		twt = re.sub(r'(#[^\s]+(\s|$))','',twt) ## remove #hashtags
 		#print(twt)
-		# twt = re.sub(r'(&[^\s]+(\s|$))','',twt)
-		# print(twt)
-		twt = re.sub(r'[^\w\s\']','',twt) 
+		twt = re.sub(r'[^\w\s\']','',twt) ## remove special characters exclude ' 
 		#print(twt)
-		twt = re.sub(r'\d','',twt)
+		twt = re.sub(r'\d','',twt) ## remove digits
 		#print(twt)
-		twt = re.sub(r'\s+',' ',twt)
+		twt = re.sub(r'\s+',' ',twt) ## remove extra whitespace
 		#print(twt)
-		twt = sym_spell.lookup_compound(twt,max_edit_distance=2)[0]._term
+		twt = sym_spell.lookup_compound(twt,max_edit_distance=2)[0]._term ## correct spelling errors
 		#print(twt)
-		twt = twt.lower()
+		twt = twt.lower() ## make lower case 
 		#print(twt)
 		process.append(twt)
 		#print(twt)
+	
+	## Use space pipeline for optimized lemmatizing 
 	nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
 	for doc in nlp.pipe(process, batch_size=20):
 		preproc_pipe.append(lemmatize_pipe(doc))
-		# processed_doc = lemmatize_pipe(doc)
-		# if processed_doc:
-		# 	preproc_pipe.append(processed_doc)
 	return preproc_pipe
 
+## Batching for parallel computing
 def batch_lemmatizer(texts,chunksize=100):
 	executor = Parallel(n_jobs=4, backend='multiprocessing', prefer="processes")
 	do = delayed(chunk_processor)
@@ -161,17 +156,18 @@ def batch_lemmatizer(texts,chunksize=100):
 # if __name__ == "__main__":
 	# client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
 	# db = client['tweet_DB']
+
 	# #df = pd.DataFrame(list(db['labeled_Training_Data'].find({},{'_id':0,'text':1,'label':1})))
-	# df = pd.DataFrame(list(db['testing_Tweets_Labeled'].find({},{'_id':0,'text':1,'label':1})))
+
+
 	# df['label'].replace(to_replace = 'pos',value = 4,inplace = True)
 	# df['label'].replace(to_replace = 'neut',value = 2,inplace = True)
 	# df['label'].replace(to_replace = 'neg',value = 0,inplace = True)
+
 	# df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50)))
 	# df = df[df['lema_text'] != '']
 
-	# db.test_Tweets_Processed.insert_many(df.to_dict('records'))
-	# # test2 = '@hiyorihere Chick-fil-A https://t.co/HBlpCzX4sq'
-	# # print(str(batch_lemmatizer([test2])))
+	# db.processed_Training_Data_Three.insert_many(df.to_dict('records'))
 
 
 
@@ -179,31 +175,3 @@ def batch_lemmatizer(texts,chunksize=100):
 
 
 
-
-
-
-
-
-
-
-
-#     print(batch_lemmatizer([test_sentence]))
-#print(normalize_tweet(test_sentence))
-# nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
-# doc = nlp.pipe([test_sentence],batch_size=1)
-# for docs in doc:
-# 	print(docs)
-# 	lemma_list = [str(tok.lemma_).lower() for tok in docs if tok.is_alpha]
-# print(lemma_list)
-# s = ' '.join(lemma_list)
-# print(s)
-# print(sym_spell.lookup_compound(s,max_edit_distance=2)[0]._term.split())
-## split regexs
-
-	# twt = re.sub(r'\s+',' ',twt) #remove extra white space
-	# #print('removed white space: '+twt)
-	# twt = re.sub(r'@[^\s]+(\s|$)','',twt)# remove @ mentions
-	# #print('removed @ mention: '+twt)
-	# twt = re.sub(r'#[^\s]+(\s|$)','',twt) #remove #tags
-	# #print('removed tags: '+twt)
-	# twt = re.sub(r'https?://[^\s]+(\s|$)','',twt) # remove links

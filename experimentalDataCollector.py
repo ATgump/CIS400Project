@@ -1,5 +1,4 @@
 import tweepy
-import myTwitterCookbook
 import json
 import pymongo
 from urllib3.exceptions import ProtocolError
@@ -70,7 +69,7 @@ class StreamListener(tweepy.StreamListener):
         if status_code == 420:
             print("------------------LIMITED-----------")
             return False
-tweet_list = []
+
 twitter_api = connect_to_twitter_OAuth()
 myStreamListener = StreamListener()
 myStream = tweepy.Stream(auth = twitter_api.auth, listener=myStreamListener, tweet_mode = 'extended')
@@ -85,5 +84,3 @@ while True:
         print("encountered a protocol error")
         continue
 
-
-#maybe remove this:::: Gruesome factory farms are pumping animals full of antibiotics, helping to create vicious new superbugs -- but now @McDonalds has a golden opportunity to help stop the next pandemic! Add your voice!

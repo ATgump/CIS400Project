@@ -1,4 +1,3 @@
-import myTwitterCookbook
 import pandas as pd
 import numpy as np
 import pymongo
@@ -119,22 +118,4 @@ if __name__ == "__main__":
 	# plt.show()
 
 
-
-# while True:
-#     n = random.randint(0, 2**32 - 20)
-#     X_train,X_test,y_train,y_test = sklearn.model_selection.train_test_split(v,df['label'],test_size=.2,random_state=n) #tframe.drop('CLASS_ATR',axis = 1),tframe['CLASS_ATR']
-#     mlp = MLPClassifier(hidden_layer_sizes=(256,256,256,256)) #max_iter=250
-#     mlp.fit(X_train,y_train)
-#     print("Fit 1 Done")
-#     mlp2 = MLPClassifier() #max_iter=250
-#     mlp2.fit(X_train,y_train)
-#     print("Fit 2 Done")
-#     pred_MLP = mlp.predict(X_test)
-#     pred_MLP2 = mlp2.predict(X_test)
-#     report1 = precision_score(y_test,pred_MLP,average='macro')
-#     report2 = precision_score(y_test,pred_MLP2,average='macro')
-#     print("Score of 'Optimized': " + str(report1) + "\tScore of Default: " + str(report2))
-#     if report1 > report2 + .01:
-#         print("This is the state to use: " + str(n))
-#         break
 	

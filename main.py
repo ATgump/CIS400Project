@@ -1,4 +1,3 @@
-import myTwitterCookbook
 import pandas as pd
 import numpy as np
 import pymongo
@@ -39,83 +38,133 @@ if __name__ == "__main__":
 
 	df = pd.DataFrame(list(db['processed_Training_Data_Three'].find({},{'_id':0,'lema_text':1,'label':1})))
 
-
+## CREATE AND SAVE TFIDF VECTORIZOR ### 
 	vectorizor = sk.text.TfidfVectorizer(min_df=.000027) #stop_words=sk._stop_words.ENGLISH_STOP_WORDS,min_df=.00003,max_df=.94
 	v = vectorizor.fit_transform(df['lema_text'].to_numpy())
-	# TF_Vec = 'TFIDF_Vectorizer.pkl'
-	# joblib.dump(vectorizor, TF_Vec)
+	TF_Vec = 'TFIDF_Vectorizer.sav'
+	joblib.dump(vectorizor, TF_Vec)
 
 	print("Random state = " + str(n))
 	X_train,X_test,y_train,y_test = sklearn.model_selection.train_test_split(v,df['label'],test_size=.2,random_state=2372017502) #tframe.drop('CLASS_ATR',axis = 1),tframe['CLASS_ATR'] 1016102622 2372017502
 	
-	
+	### TRAIN AND SAVE MODELS/Reports ### 
+
 	# MNB_classifier=sklearn.naive_bayes.MultinomialNB()
 	# MNB_classifier.fit(X_train,y_train)
+	# MNB = 'Multinomial_Naive_Bayes_Trained_Model.sav'
+	# joblib.dump(MNB_classifier, MNB)
 	
-	# mlp = MLPClassifier() #max_iter=250
+	# print("Multinomial Naive Bayes Classifier Report: \t\t")
+	# pred_MNB = MNB_classifier.predict(X_test)
+	# report = sklearn.metrics.classification_report(y_test,pred_MNB)
+	# print(report)
+	# with open('MNB_Table.txt','w') as file:
+	# 	file.write(report)
+
+
+
+
+	# mlp = MLPClassifier()
 	# mlp.fit(X_train,y_train)
-
-	mlp2 = MLPClassifier(hidden_layer_sizes = (1000,)) #max_iter=250
-	mlp2.fit(X_train,y_train)
-
-	# SV_classifier = svm.SVC()
-	# SV_classifier.fit(X_train,y_train)
-
-	# DT_classifier = DecisionTreeClassifier()
-	# DT_classifier.fit(X_train,y_train)
-
-	# GNB_classifier = GaussianNB()
-	# GNB_classifier.fit(X_train.toarray(),y_train)
-
-	# RF_classifier = RandomForestClassifier()
-	# RF_classifier.fit(X_train,y_train)
-
-	# LSV_classifier = LinearSVC()
-	# LSV_classifier.fit(X_train,y_train)
-	
-	MLPC = 'Multi_Layer_Perceptron_Trained_Model.sav'
-	joblib.dump(mlp2, MLPC)
-
-	# RFC = 'Random_Forest_Trained_Model.sav'
-	# joblib.dump(RF_classifier, RFC)
-
-	# LSVC = 'Linear_Support_Vector_Trained_Model.sav'
-	# joblib.dump(LSV_classifier, LSVC)
-
-
-#     print("Multinomial Naive Bayes Classifier Report: \t\t")
-#     pred_MNB = MNB_classifier.predict(X_test)
-#     print(sklearn.metrics.classification_report(y_test,pred_MNB))
+	# DMLPC = 'Default_Multi_Layer_Perceptron_Trained_Model.sav'
+	# joblib.dump(mlp, DMLPC)
 
 	# print("Multi-Layer Perceptron Classifier Report Default: \t\t")
 	# pred_MLP = mlp.predict(X_test)
-	# print(sklearn.metrics.classification_report(y_test,pred_MLP))
-	
-	# print("Multi-Layer Perceptron Classifier Report 'optimized': \t\t")
-	# pred_MLP2 = mlp2.predict(X_test)
-	# print(sklearn.metrics.classification_report(y_test,pred_MLP2))
+	# report = sklearn.metrics.classification_report(y_test,pred_MLP)
+	# print(report)
+	# with open('Default_MLP_Table.txt','w') as file:
+	# 	file.write(report)
 
+
+
+
+	# mlp2 = MLPClassifier(hidden_layer_sizes = (1000,)) 
+	# mlp2.fit(X_train,y_train)
+	# MLPC = 'Optimized_Multi_Layer_Perceptron_Trained_Model.sav'
+	# joblib.dump(mlp2, MLPC)
+
+	# print("Multi-Layer Perceptron Classifier Report Optimized: \t\t")
+	# pred_MLP2 = mlp2.predict(X_test)
+	# report = sklearn.metrics.classification_report(y_test,pred_MLP2)
+	# print(report)
+	# with open('Optimized_MLP_Table.txt','w') as file:
+	# 	file.write(report)
+
+
+
+	# SV_classifier = svm.SVC()
+	# SV_classifier.fit(X_train,y_train)
+	# SV = 'Support_Vector_Trained_Model.sav'
+	# joblib.dump(SV_classifier, SV)
 
 	# print("Support Vector Classifier Report: \t\t")
 	# pred_SV = SV_classifier.predict(X_test)
-	# print(sklearn.metrics.classification_report(y_test,pred_SV))
+	# report = sklearn.metrics.classification_report(y_test,pred_SV)
+	# print(report)
+	# with open('SV_Table.txt','w') as file:
+	# 	file.write(report)
 
-#     print("Decision Tree Classifier Report: \t\t")
-#     pred_DT = DT_classifier.predict(X_test)
-#     print(sklearn.metrics.classification_report(y_test,pred_DT))
-	
+
+
+
+	# DT_classifier = DecisionTreeClassifier()
+	# DT_classifier.fit(X_train,y_train)
+	# DT = 'Decision_Tree_Trained_Model.sav'
+	# joblib.dump(DT_classifier, DT)
+
+	# print("Decision Tree Classifier Report: \t\t")
+	# pred_DT = DT_classifier.predict(X_test)
+	# report = sklearn.metrics.classification_report(y_test,pred_DT)
+	# print(report)
+	# with open('DT_Table.txt','w') as file:
+	# 	file.write(report)
+
+
+
+
+	# GNB_classifier = GaussianNB()
+	# GNB_classifier.fit(X_train.toarray(),y_train)
+	# GNB = 'Gaussian_Naive_Bayes_Trained_Model.sav'
+	# joblib.dump(GNB_classifier, GNB)
+
 	# print("Gausian Naive Bayes Classifier Report: \t\t")
 	# pred_GNB = GNB_classifier.predict(X_test.toarray())
-	# print(sklearn.metrics.classification_report(y_test,pred_GNB))
+	# report = sklearn.metrics.classification_report(y_test,pred_GNB)
+	# print(report)
+	# with open('GNB_Table.txt','w') as file:
+	# 	file.write(report)
+
+
+
+	# RF_classifier = RandomForestClassifier()
+	# RF_classifier.fit(X_train,y_train)
+	# RFC = 'Random_Forest_Trained_Model.sav'
+	# joblib.dump(RF_classifier, RFC)
 
 	# print("Random Forest Classifier Report: \t\t")
 	# pred_RF = RF_classifier.predict(X_test)
-	# print(sklearn.metrics.classification_report(y_test,pred_RF))
+	# report = sklearn.metrics.classification_report(y_test,pred_RF)
+	# print(report)
+	# with open('RF_Table.txt','w') as file:
+	# 	file.write(report)
 
+
+
+
+	# LSV_classifier = LinearSVC()
+	# LSV_classifier.fit(X_train,y_train)
+	# LSVC = 'Linear_Support_Vector_Trained_Model.sav'
+	# joblib.dump(LSV_classifier, LSVC)
+	
 	# print("Linear Support Vector Classifier Report: \t\t")
 	# pred_LSV = LSV_classifier.predict(X_test)
-	# print(sklearn.metrics.classification_report(y_test,pred_LSV))
+	# report = sklearn.metrics.classification_report(y_test,pred_LSV)
+	# print(report)
+	# with open('LSV_Table.txt','w') as file:
+	# 	file.write(report)
 
+### OPTIMIZE GRID SEARCH ### 
 
 # 	parameter_space = {
 # 	'max_iter':[200,1000],    
@@ -163,6 +212,8 @@ if __name__ == "__main__":
 
 
 
+### CREATE WORD CLOUD ###
+
 	# STOPWORDS.add('go')
 	# STOPWORDS.add('get')
 	# #print(len(vectorizor.get_feature_names()))
@@ -193,25 +244,25 @@ if __name__ == "__main__":
 
 ##### MLP OPTIMIZED CHARTS
 
-pred = mlp2.predict(X_test)
+# pred = mlp2.predict(X_test)
 
-CM = confusion_matrix(y_test,pred)
-cm_display = ConfusionMatrixDisplay(CM)
-cm_display.plot()
-plt.savefig('Confusion_Matrix.png')
-
-
-y_score = mlp2.predict_proba(X_test)
+# CM = confusion_matrix(y_test,pred)
+# cm_display = ConfusionMatrixDisplay(CM)
+# cm_display.plot()
+# plt.savefig('Confusion_Matrix.png')
 
 
-prec, recall, _ = precision_recall_curve(y_test, y_score[:,1], pos_label=4)
-pr_display = PrecisionRecallDisplay(precision=prec, recall=recall)
-pr_display.plot()
-plt.savefig('precison_recall.png')
+# y_score = mlp2.predict_proba(X_test)
 
 
-fpr, tpr, _ = roc_curve(y_test, y_score[:,1], pos_label=4)
-roc_display = RocCurveDisplay(fpr=fpr, tpr=tpr)
-roc_display.plot()
-plt.savefig('Roc_Curve.png')
+# prec, recall, _ = precision_recall_curve(y_test, y_score[:,1], pos_label=4)
+# pr_display = PrecisionRecallDisplay(precision=prec, recall=recall)
+# pr_display.plot()
+# plt.savefig('precison_recall.png')
+
+
+# fpr, tpr, _ = roc_curve(y_test, y_score[:,1], pos_label=4)
+# roc_display = RocCurveDisplay(fpr=fpr, tpr=tpr)
+# roc_display.plot()
+# plt.savefig('Roc_Curve.png')
 

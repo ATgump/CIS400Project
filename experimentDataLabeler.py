@@ -18,7 +18,6 @@ def flatten(L):
 def chunk_processor(texts):
 	preproc_pipe=[]
 	Vectorizor = joblib.load('TFIDF_Vectorizer.sav')
-	#print(type(Vectorizor))
 	MLP_model = joblib.load('Multi_Layer_Perceptron_Trained_Model.sav')
 	RF_model = joblib.load('Random_Forest_Trained_Model.sav')
 	LSV_model = joblib.load('Linear_Support_Vector_Trained_Model.sav')
@@ -32,8 +31,7 @@ def chunk_processor(texts):
 	# 		preproc_pipe.append({'text':twt,'label':4})
 	# 	elif MLP_model.predict(test) == 2: 				
 	# 		preproc_pipe.append({'text':twt,'label':2})
-	# 	else:
-	# 		print("This is a bug")
+
 	
 	
 	# for twt in texts:
@@ -44,9 +42,7 @@ def chunk_processor(texts):
 	# 		preproc_pipe.append({'text':twt,'label':4})
 	# 	elif RF_model.predict(test) == 2: 				
 	# 		preproc_pipe.append({'text':twt,'label':2})
-	# 	else:
-	# 		print("This is a bug")
-	
+
 	
 	# for twt in texts:
 	# 	test = Vectorizor.transform([twt])
@@ -56,8 +52,7 @@ def chunk_processor(texts):
 	# 		preproc_pipe.append({'text':twt,'label':4})
 	# 	elif LSV_model.predict(test) == 2: 				
 	# 		preproc_pipe.append({'text':twt,'label':2})
-	# 	else:
-	# 		print("This is a bug")
+
 
 	
 	for twt in texts:
@@ -68,8 +63,7 @@ def chunk_processor(texts):
 			preproc_pipe.append({'text':twt,'label':4})
 		elif LSV_model.predict(test) == 2 and RF_model.predict(test) == 2 and MLP_model.predict(test) == 2: 				
 			preproc_pipe.append({'text':twt,'label':2})
-		# else:
-		# 	print("This is a bug")
+
 
 
 	return preproc_pipe
