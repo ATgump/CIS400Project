@@ -1,6 +1,6 @@
 # CIS400Project - Sentiment Analysis of Restuarants
 #### By: Avery Gump, Jacob Morrison, Chi Chi Tong, and Jon Williams
-Python version used: 3.9.5
+Python version used: 3.9.5  
 To install the required packages for our project use: 
 ```powershell 
 pip install -r './requirements.txt'
@@ -8,7 +8,7 @@ pip install -r './requirements.txt'
 To connect to our MongoDB use the connection string: mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true
 
 Most files can be run as is and will show some demo of what each file is doing (see notes for certain functionality that was commented out for the demonstration or ways to speed up the processing). Adding things to mongo/saving files have been commented out, only demos are shown.
-
+## Python Files
 ### trainDataCollector.py
 Note: While most exceptions are handled some may still occur, it was infrequent enough, for our needs, to not handle and restart the program. I commented out the part that adds the tweets to mongo so you can test without altering the data set we collected.
 
