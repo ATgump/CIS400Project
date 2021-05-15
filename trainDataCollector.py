@@ -60,7 +60,7 @@ class StreamListener(tweepy.StreamListener):
 twitter_api = connect_to_twitter_OAuth()
 myStreamListener = StreamListener()
 myStream = tweepy.Stream(auth = twitter_api.auth, listener=myStreamListener, tweet_mode = 'extended')
-q4 = ["McDonalds","Wendys",'Burger King','Pizza Hut',"Whataburger","In-N-OutBurger","White Castle","Starbucks","Auntie Anne\'s","Popeyes","Chick-fil-A",'Taco Bell',"Arby\'s","Dairy Queen"]
 
 ## Filter english tweets with q4 for query terms ##
+q4 = ["McDonalds","Wendys",'Burger King','Pizza Hut',"Whataburger","In-N-OutBurger","White Castle","Starbucks","Auntie Anne\'s","Popeyes","Chick-fil-A",'Taco Bell',"Arby\'s","Dairy Queen"]
 myStream.filter(track=q4, languages=['en'])

@@ -74,7 +74,7 @@ class StreamListener(tweepy.StreamListener):
                     print("This tweet was not found to be about a restraunt in the query")
             
             except:
-                print("UH oh an exception occured")
+                print("exception occured")
                 return
         else:
             print("FINISHED COLLECTION")

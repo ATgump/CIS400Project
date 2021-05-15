@@ -15,7 +15,12 @@ if __name__ == "__main__":
 	X_train,X_test,y_train,y_test = train_test_split(v,df['label'],test_size=.2,random_state=2372017502)
 	mlp = MLPClassifier()
 	
-	## Parameters to search this example may
+
+	
+	## Parameters to search. The example uncommented should be 
+	## small enough to run all the folds/combinations at the same 
+	## time but normally more parameters would be tested at once.
+
 	parameter_space = {
 	#'max_iter':[200,1000],    
 	'hidden_layer_sizes': 
@@ -52,7 +57,7 @@ if __name__ == "__main__":
 	clf.fit(X_train, y_train)
 
 
-	# Best parameters set
+	# Best parameters are
 	print('Best parameters found:\n', clf.best_params_)
 
 	# Show All results

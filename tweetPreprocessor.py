@@ -84,17 +84,17 @@ def load_dict_smileys():
 def emoji_Replacer(twt):
 	tweet_list = twt.split()
 	emoticons = load_dict_smileys()
-	edited = [emoticons[word] if word in emoticons else word for word in tweet_list]
+	edited = [emoticons[word] if word in emoticons else word for word in tweet_list] ## emoticon removal
 	tweet = ' '.join(edited)
-	tweet = demojize(tweet)
-	tweet = tweet.replace(":"," ")
+	tweet = demojize(tweet) ## emoji removal
+	tweet = tweet.replace(":"," ") ## remove emoji package specific delimiters
 	return tweet
 
 # Return a generator for the chunks
 def chunker(tweet_list,length,chunksize):
 	return(tweet_list[pos:pos + chunksize] for pos in range(0,length,chunksize)) 
 
-# Create set of stopwords to remove 
+# Create set of stopwords to remove, q4 is the list of query terms after being preprocessed (to the point they would be when stop words are being removed)
 q4 =['mcdonald', 'wendy', 'burger', 'starbuck', 'king', 'pizza', 'hut', 'inonu', 'white', 'castle', 'auntie', 'news', 'popeye', 'chick', 'fila', 'taco', 'bell', 'abyss', 'dairy' ,'queen']
 words = set(q4) | set(stopwords.words('english')) | set(['face'])
 

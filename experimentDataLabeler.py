@@ -91,17 +91,19 @@ if __name__ == "__main__":
 	
 	for restaurant in restaurants:
 		if restaurant == 'McD':
-			col = 'experimental_Data_McDonalds'
+			col = 'experimental_Data_McDonalds' ## small error in consistency with DB collection naming, handled in this if/else.
 		else:
 			col =  'experimental_Data_' + restaurant
-		cursor = db[col].find({},{'text':1,'_id':0})
+		cursor = db[col].find({},{'text':1,'_id':0}) ## retrieve the tweets from a restaurant
 		df = pd.DataFrame(list(cursor))
 		print(df)
-		df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50)))
+		df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50))) ## preprocess the tweets
 		df = df[df['lema_text'] != '']
 		print(df)
+
+		## Run experiment using the different models. Insert the labeled data into mongo collection (commented out)
 		for method in methods:
 			ins = 'exp_Data_' + restaurant + '_' + method
 			labeled = batch_labeler(df['lema_text'],chunksize=128,method = method)
 			print(pd.DataFrame(labeled))
-			db[ins].insert_many(labeled)
+			#db[ins].insert_many(labeled)

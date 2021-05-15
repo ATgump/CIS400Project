@@ -34,12 +34,12 @@ if __name__ == "__main__":
 	models = ['MLP','RF','LSV','Combined']
 
 	for model in models:
-		table = ''
+		table = '' ## table to record the values of the pie chart 
 		for restaurant in restaurants:
 			table = table + restaurant + '\n'
-			col = 'exp_Data_' + restaurant + '_' + model
+			col = 'exp_Data_' + restaurant + '_' + model ## mongo collection to access
 			if model == 'Combined':
-				sample = sampleDB(db[col],2000)
+				sample = sampleDB(db[col],2000) ## combining methods resulted in smalled data set so smaller sample taken
 			else:
 				sample = sampleDB(db[col],2500)	
 			df = pd.DataFrame(sample)
@@ -47,11 +47,12 @@ if __name__ == "__main__":
 			values = df['label'].value_counts(sort = False)
 			table = table + values.to_string() + '\n\n'
 			fig = generatePieChart(values,mlabels,restaurant,model)
-			s = '.\\charts\\experiment_Charts\\pie_Charts\\'+restaurant + '_Pie_Chart_' + model
-			#fig.savefig(s)
+			pie_Chart_Path = '.\\charts\\experiment_Charts\\pie_Charts\\'+restaurant + '_Pie_Chart_' + model
+			#fig.savefig(pie_Chart_Path)
 		print(table)
-		# table_path = '.\\charts\\experiment_Charts\\data_Tables\\' + model + '_Experiment_Data_Table.txt'
-		# with open(table_path,'w') as file:
+		
+		table_Path = '.\\charts\\experiment_Charts\\data_Tables\\' + model + '_Experiment_Data_Table.txt'
+		# with open(table_Path,'w') as file:
 		# 	file.write(table)
 
 ## 2. Generate WordCloud
@@ -107,7 +108,7 @@ if __name__ == "__main__":
 
 
 
-# Get a Sample of tweets for review ##
+# Get a Sample of tweets for review (human annotating) ##
 
 	f1 = pd.DataFrame(sampleDB(db.exp_Data_Wendys_Combined,40))
 	f2 = pd.DataFrame(sampleDB(db.exp_Data_BK_Combined,40))

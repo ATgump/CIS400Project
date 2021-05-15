@@ -37,7 +37,7 @@ if __name__ == "__main__":
 	v = vectorizor.fit_transform(df['lema_text'].to_numpy())
 	
 	TF_Vec = '.\\trained_Models\\TFIDF_Vectorizer.sav'
-	joblib.dump(vectorizor, TF_Vec)
+	#joblib.dump(vectorizor, TF_Vec)
 
 	X_train,X_test,y_train,y_test = train_test_split(v,df['label'],test_size=.2,random_state=2372017502)
 	
@@ -57,12 +57,20 @@ if __name__ == "__main__":
 	for (model_name,model) in Models:
 		path_Model ='.\\trained_Models\\'+ model_name + "_Trained_Model.sav"
 		path_Report = '.\\trained_Models\\model_Classification_Reports\\'+ model_name + "_Report_Table.txt"
+		
+
+		# Data was not in proper format for Gaussian naive bayes, it is possible
+		# we did not properly transform the data to train this model properly which
+		# would explain the lower performance for this model compared to the others
+
 		if model_name == 'Gaussian_Naive_Bayes':
 			trained = fitModel(model,model_name,X_train.toarray(),y_train)
 			report = testModel(trained,path_Report,X_test.toarray(),y_test)
 		else:
 			trained = fitModel(model,model_name,X_train,y_train)
 			report = testModel(trained,path_Report,X_test,y_test)
+		
+		## Save the Model/Report ## 
 		# joblib.dump(trained, path_Model)
 		# with open(path_Report,'w') as file:
 		#  	file.write(report)
