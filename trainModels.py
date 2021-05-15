@@ -63,6 +63,6 @@ if __name__ == "__main__":
 		else:
 			trained = fitModel(model,model_name,X_train,y_train)
 			report = testModel(trained,path_Report,X_test,y_test)
-		joblib.dump(trained, path_Model)
-		with open(path_Report,'w') as file:
-		 	file.write(report)
+		# joblib.dump(trained, path_Model)
+		# with open(path_Report,'w') as file:
+		#  	file.write(report)
