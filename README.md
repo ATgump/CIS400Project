@@ -5,7 +5,7 @@ To install the required packages for our project use:
 ```powershell 
 pip install -r './requirements.txt'
 ```
-You may also need to download nltk data seperately
+You may also need to download nltk data (stopwords) seperately
 
 
 
