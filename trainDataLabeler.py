@@ -21,11 +21,11 @@ def chunk_processor(texts):
 
 		## only keep tweets that Textblob/VADER agree on
 		if se.polarity_scores(twt)['compound'] < 0 and tb.sentiment.polarity < 0:
-			preproc_pipe.append({'text':twt,'label':'neg'})
+			preproc_pipe.append({'text':twt,'label':0})
 		if se.polarity_scores(twt)['compound'] > 0 and tb.sentiment.polarity > 0: 				
-			preproc_pipe.append({'text':twt,'label':'pos'})
+			preproc_pipe.append({'text':twt,'label':4})
 		if se.polarity_scores(twt)['compound'] == 0 and tb.sentiment.polarity == 0: 				
-			preproc_pipe.append({'text':twt,'label':'neut'})
+			preproc_pipe.append({'text':twt,'label':2})
 			
 	return preproc_pipe
 

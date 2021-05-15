@@ -70,8 +70,6 @@ if __name__ == "__main__":
 	MLP2_report = precision_score(y_test,pred_MLP2,average='macro')
 	print(MLP2_report)
 
-	# mlp2 = MLPClassifier(hidden_layer_sizes = (1000,),max_iter=500) #max_iter=250
-	# mlp2.fit(X_train,y_train)
 
 	# SV_classifier = svm.SVC()
 	# SV_classifier.fit(X_train,y_train)

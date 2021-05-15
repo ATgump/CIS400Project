@@ -88,7 +88,7 @@ def emoji_Replacer(twt):
 	tweet = ' '.join(edited)
 	tweet = demojize(tweet)
 	tweet = tweet.replace(":"," ")
-	return(tweet)
+	return tweet
 
 # Return a generator for the chunks
 def chunker(tweet_list,length,chunksize):
@@ -145,7 +145,7 @@ def chunk_processor(texts):
 
 ## Batching for parallel computing
 def batch_lemmatizer(texts,chunksize=100):
-	executor = Parallel(n_jobs=1, backend='multiprocessing', prefer="processes")
+	executor = Parallel(n_jobs=3, backend='multiprocessing', prefer="processes")
 	do = delayed(chunk_processor)
 	tasks = (do(chunk) for chunk in chunker(texts, len(texts), chunksize=chunksize))
 	result = executor(tasks)
@@ -158,18 +158,13 @@ if __name__ == "__main__":
 
 	df = pd.DataFrame(list(db['labeled_Training_Data'].find({},{'_id':0,'text':1,'label':1})))
 	print(df)
-	## replace string labels with integer values 
-	## (was a mistake to label as strings but this was quicker/easier than relabeling)
-	df['label'].replace(to_replace = 'pos',value = 4,inplace = True)
-	df['label'].replace(to_replace = 'neut',value = 2,inplace = True)
-	df['label'].replace(to_replace = 'neg',value = 0,inplace = True)
 
 	df['lema_text'] = (pd.Series(batch_lemmatizer(df['text'],50))) ## preprocess the text
 	df = df[df['lema_text'] != '']
 	print(df)
 
 	### JUST FOR INSERTING (leave commented) ##
-	# db.processed_Training_Data_Three.insert_many(df.to_dict('records'))
+	#db.processed_Training_Data.insert_many(df.to_dict('records'))
 
 	### Single tweet to test preprocessing steps (used in presentation) ###
 	# string = '@Sparkywoomy A freshsalad of all fruits &amp; vegetables is a part of the McSparky meald availableee noaw at your nearest McDonalds staore. #trending 😠😠😠 https://t.co/KhWTXElnJb &gt; (a $100 value) :)'

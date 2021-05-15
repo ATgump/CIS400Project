@@ -50,21 +50,21 @@ class StreamListener(tweepy.StreamListener):
 
                 ## Add McD tweet to McD DB (experimental_Data_McDonalds)
                 if any(x in db_add['text'] for x in mcd):
-                    db.experimental_Data_McDonalds.insert_one(db_add)
+                    #db.experimental_Data_McDonalds.insert_one(db_add)
                     print('# of tweets collected:: '+str(self.tweet_counter))
                     print("Tweet added to McDonalds DB: " + db_add['text'])
                     return
 
                 ## Add Wendys tweet to Wendys DB (experimental_Data_Wendys)   
                 elif any(x in db_add['text'] for x in wend):
-                    db.experimental_Data_Wendys.insert_one(db_add)
+                    #db.experimental_Data_Wendys.insert_one(db_add)
                     print('# of tweets collected:: '+str(self.tweet_counter))
                     print("Tweet added to Wendys DB: " + db_add['text'])
                     return
 
                 ## Add BK tweet to BK DB (experimental_Data_BK)    
                 elif any(x in db_add['text'] for x in bk):
-                    db.experimental_Data_BK.insert_one(db_add)
+                    #db.experimental_Data_BK.insert_one(db_add)
                     print('# of tweets collected:: '+str(self.tweet_counter))
                     print("Tweet added to BurgerKing DB: " + db_add['text'])
                     return

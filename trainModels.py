@@ -30,14 +30,14 @@ if __name__ == "__main__":
 	
 	client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
 	db = client['tweet_DB']
-	df = pd.DataFrame(list(db['processed_Training_Data_Three'].find({},{'_id':0,'lema_text':1,'label':1})))
+	df = pd.DataFrame(list(db['processed_Training_Data'].find({},{'_id':0,'lema_text':1,'label':1})))
 
 ## CREATE AND SAVE TFIDF VECTORIZOR ### 
 	vectorizor = TfidfVectorizer(min_df=.000027)
 	v = vectorizor.fit_transform(df['lema_text'].to_numpy())
 	
-	#TF_Vec = 'TFIDF_Vectorizer.sav'
-	#joblib.dump(vectorizor, TF_Vec)
+	TF_Vec = '.\\trained_Models\\TFIDF_Vectorizer.sav'
+	joblib.dump(vectorizor, TF_Vec)
 
 	X_train,X_test,y_train,y_test = train_test_split(v,df['label'],test_size=.2,random_state=2372017502)
 	
@@ -55,10 +55,14 @@ if __name__ == "__main__":
 		]
 
 	for (model_name,model) in Models:
-		file_name_Model = model_name + "_Trained_Model.sav"
-		file_name_Report = model_name + "_Report_Table.txt"
-		trained = fitModel(model,model_name,X_train,y_train)
-		#joblib.dump(trained, file_name_Model)
-		report = testModel(trained,file_name_Report,X_test,y_test)
-		# with open(file_name_Report,'w') as file:
-		# 	file.write(report)
+		path_Model ='.\\trained_Models\\'+ model_name + "_Trained_Model.sav"
+		path_Report = '.\\trained_Models\\model_Classification_Reports\\'+ model_name + "_Report_Table.txt"
+		if model_name == 'Gaussian_Naive_Bayes':
+			trained = fitModel(model,model_name,X_train.toarray(),y_train)
+			report = testModel(trained,path_Report,X_test.toarray(),y_test)
+		else:
+			trained = fitModel(model,model_name,X_train,y_train)
+			report = testModel(trained,path_Report,X_test,y_test)
+		joblib.dump(trained, path_Model)
+		with open(path_Report,'w') as file:
+		 	file.write(report)

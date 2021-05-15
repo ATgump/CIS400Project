@@ -9,6 +9,8 @@ pip install -r './requirements.txt'
 ```
 To connect to our MongoDB use the connection string: mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true
 
+Most files can be run as is and will show some demo of what each file is doing (see notes for certain functionality that was commented out for the demonstration or ways to speed up the processing).
+
 ## trainDataCollector.py
 Note: While most exceptions are handled some may still occur, it was infrequent enough, for our needs, to not handle and restart the program. I commented out the part that adds the tweets to mongo so you can test without altering the data set we collected.
 
@@ -51,23 +53,16 @@ clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=3,verbose = 100)
 ## experimentDataCollector.py
 Similar to trainData collector but with search query: `["McDonalds","Wendys",'Burger King']` and instead of adding all the tweets to a single database it seperates them depending on which restaurant they are about.
 ## experimentDataLabeler.py
-Label the data collected during the experiment data collection phase using our trained models. To perform the tests first, uncomment the proper restaurant db from:
-```python
-	cursor = db['experimental_Data_Wendys'].find({},{'text':1,'_id':0})
-	#cursor = db['experimental_Data_BK'].find({},{'text':1,'_id':0})
-	#cursor = db['experimental_Data_McDonalds'].find({},{'text':1,'_id':0})
-```
-Second, uncomment the test you would like to perform (which model(s) to label with) in chunk_processor (currently test 4: Combined). To add to them to the (proper) database, select the correct restaurant and method from:
-```python
-	restaurant = 'Wendys'# 'BK' 'McD'
-	method = 'Combined' # 'MLP' 'RF' 'LSV'
-	ins = 'exp_Data_' + restaurant + '_' + method
-```
-and uncomment:
+Note: Adding to DB is commented out if you would like to add the data to DB uncomment the following line:
 ```python
 # db[ins].insert_many(labeled)
 ```
 
  As with other parallel tasks, n_jobs could cause memory issues so I have set it to 1, you may want to adjust this to speed up the test.  
 ## chartGeneration.py
+Saving charts/tables is commented out, only generates them.
+1. Create Pie Charts from DB random sample
+2. Create Word cloud from mean TFIDF
+3. Create Confusion Matrix for Optimized Multi-Layer Perceptron 
+4. Get sample from experiment/training data for human annotation
 

@@ -6,21 +6,22 @@ import pymongo
 
 if __name__ == "__main__":
 	
-	## Load data and vectorizor, construct model 
+	## Load data and vectorizor, construct model, fit vectorizor
 	client = pymongo.MongoClient('mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
 	db = client['tweet_DB']
-	df = pd.DataFrame(list(db['processed_Training_Data_Three'].find({},{'_id':0,'lema_text':1,'label':1})))
-	v = joblib.load('TFIDF_Vectorizer.sav')
+	df = pd.DataFrame(list(db['processed_Training_Data'].find({},{'_id':0,'lema_text':1,'label':1})))
+	vec = joblib.load('.\\trained_Models\\TFIDF_Vectorizer.sav')
+	v = vec.transform(df['lema_text'].to_numpy())
 	X_train,X_test,y_train,y_test = train_test_split(v,df['label'],test_size=.2,random_state=2372017502)
 	mlp = MLPClassifier()
 	
-	## Parameters to search
+	## Parameters to search this example may
 	parameter_space = {
-	'max_iter':[200,1000],    
+	#'max_iter':[200,1000],    
 	'hidden_layer_sizes': 
 	[
 		(500,),
-		(750,),
+		#(750,),
 		(1000,)
 	#(50,50,50,50,50,50,50,50,50,50,50,50,50,50,50), 
 	#(500,500,500),  
