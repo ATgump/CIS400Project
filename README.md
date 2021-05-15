@@ -5,6 +5,10 @@ To install the required packages for our project use:
 ```powershell 
 pip install -r './requirements.txt'
 ```
+You may also need to download nltk data seperately
+
+
+
 To connect to our MongoDB use the connection string: mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true
 
 Most files can be run as is and will show some demo of what each file is doing (see notes for certain functionality that was commented out for the demonstration or ways to speed up the processing). Adding things to mongo/saving files have been commented out, only demos are shown.
