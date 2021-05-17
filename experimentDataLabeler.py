@@ -14,7 +14,7 @@ def chunker(tweet_list,length,chunksize):
 def flatten(L):
 	return [tweet for batch in L for tweet in batch]
 
-## Run experiment (Comment out the different tests to generate labels using different models)
+## Run a test
 def chunk_processor(texts,method):
 	preproc_pipe=[]
 
@@ -86,6 +86,8 @@ if __name__ == "__main__":
 	mConnection = 'mongodb+srv://CISProjectUser:U1WsTu2X6fix49PA@cluster0.ttjkp.mongodb.net/test?authSource=admin&replicaSet=atlas-vvszkk-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true'
 	client = pymongo.MongoClient(mConnection)
 	db = client['tweet_DB']
+	
+	## Restaurant/method combos to test.
 	restaurants = ['Wendys', 'BK', 'McD']
 	methods = ['Combined', 'MLP', 'RF', 'LSV']
 	
@@ -106,4 +108,5 @@ if __name__ == "__main__":
 			ins = 'exp_Data_' + restaurant + '_' + method
 			labeled = batch_labeler(df['lema_text'],chunksize=128,method = method)
 			print(pd.DataFrame(labeled))
+			
 			#db[ins].insert_many(labeled)

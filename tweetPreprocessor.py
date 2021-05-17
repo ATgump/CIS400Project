@@ -145,7 +145,7 @@ def chunk_processor(texts):
 
 ## Batching for parallel computing
 def batch_lemmatizer(texts,chunksize=100):
-	executor = Parallel(n_jobs=3, backend='multiprocessing', prefer="processes")
+	executor = Parallel(n_jobs=1, backend='multiprocessing', prefer="processes")
 	do = delayed(chunk_processor)
 	tasks = (do(chunk) for chunk in chunker(texts, len(texts), chunksize=chunksize))
 	result = executor(tasks)

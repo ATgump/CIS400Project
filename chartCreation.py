@@ -92,21 +92,6 @@ if __name__ == "__main__":
 	plt.show()
 	#fig.savefig('.\\charts\\Confusion_Matrix_MLP_Optimized.png')
 	
-	
-# 	# y_score = mlp2.predict_proba(X_test)
-
-# 	# prec, recall, _ = precision_recall_curve(y_test, y_score[:,1], pos_label=4)
-# 	# pr_display = PrecisionRecallDisplay(precision=prec, recall=recall)
-# 	# pr_display.plot()
-# 	# plt.savefig('precison_recall.png')
-
-
-# 	# fpr, tpr, _ = roc_curve(y_test, y_score[:,1], pos_label=4)
-# 	# roc_display = RocCurveDisplay(fpr=fpr, tpr=tpr)
-# 	# roc_display.plot()
-# 	# plt.savefig('Roc_Curve.png')
-
-
 
 # Get a Sample of tweets for review (human annotating) ##
 
